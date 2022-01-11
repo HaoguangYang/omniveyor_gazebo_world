@@ -1,0 +1,25 @@
+<?xml version='1.0'?>
+<sdf version='1.7'>
+  <model name='cncMillLarge'>
+    <link name='link'>
+      <visual name='visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>cncMillLarge.dae</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>cncMillLarge.dae</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+    <static>1</static>
+  </model>
+</sdf>

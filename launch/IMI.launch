@@ -1,0 +1,14 @@
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find omniveyor_gazebo_world)worlds/IMI-World.world"/> 
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="false"/>
+  </include>
+
+  <!--node pkg="gazebo_click" type="listener" name="listener" respawn="true" output="screen"/-->
+
+</launch>
