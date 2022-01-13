@@ -247,6 +247,9 @@ add_library(TrackedVehiclePlugin_ROS SHARED
 add_library(SimpleTrackedVehiclePlugin_ROS SHARED
   src/SimpleTrackedVehiclePlugin_ROS.cc)
   
+add_library(OmniVeyorPlugin_ROS SHARED
+  src/OmniVeyorPlugin_ROS.cc)
+  
 if (Qt5_FOUND)
     list (APPEND Qt_LIBRARIES "Qt5::Gui" "Qt5::Core")
 endif()
@@ -256,3 +259,4 @@ target_link_libraries(gui_set_path ${GAZEBO_LIBRARIES}
     ${PROTOBUF_LIBRARIES})
 target_link_libraries(TrackedVehiclePlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
 target_link_libraries(SimpleTrackedVehiclePlugin_ROS TrackedVehiclePlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
+target_link_libraries(OmniVeyorPlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
