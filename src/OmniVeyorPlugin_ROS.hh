@@ -37,6 +37,11 @@
 #include "ros/callback_queue.h"
 #include "ros/subscribe_options.h"
 #include "geometry_msgs/Twist.h"
+#include "nav_msgs/Odometry.h"
+#include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/QR>
+#include <eigen3/Eigen/Geometry>
+#include "OmniVeyor_definitions.h"
 
 namespace gazebo
 {
@@ -112,7 +117,7 @@ namespace gazebo
 
     /// \brief A ROS subscriber
     private: ros::Subscriber rosSub;
-
+    private: ros::Publisher rosPub;
     /// \brief A ROS callbackqueue that helps process messages
     private: ros::CallbackQueue rosQueue;
 
@@ -130,12 +135,56 @@ namespace gazebo
     /// \brief ROS helper function that processes messages
     private: void QueueThread()
     {
-      static const double timeout = 0.01;
+      //static const double timeout = 0.01;
+      ros::WallDuration dt = ros::WallDuration(CONTROL_PERIOD_s);
+      this->rosPub = this->rosNode->advertise<nav_msgs::Odometry>("blah", 1);
       while (this->rosNode->ok())
       {
-        this->rosQueue.callAvailable(ros::WallDuration(timeout));
+        this->controlUpdate();
+        dt.sleep();
+        this->rosQueue.callAvailable();
       }
     }
+
+    private:
+      void controlUpdate();
+      void updateJointData();
+      void updateConstraintPinvMatrix();
+      void updateCpMatrix();
+      void updateConstraintMatrix();
+      inline double casterPosXSign(int casterNum);
+      inline double casterPosYSign(int casterNum);
+      Eigen::Vector3d clampVelocity(Eigen::Vector3d xd_com_in);
+      Eigen::Vector3d clampAcceleration(Eigen::Vector3d xdd_com_in);
+      
+      Eigen::Vector3d _x_local;                             	// local position
+      Eigen::Vector3d _gx;                             		// global position
+      Eigen::Vector3d _gx_des;  								// last global operational space position command sent 
+      Eigen::Vector3d _xd_local; 								// local operational space velocity 
+      Eigen::Vector3d _gxd; 								 	// global operational space velocity 
+      Eigen::Vector3d _gxd_com;								// command global operational space velocity (sent from outside)
+      Eigen::Vector3d _gxd_des;								// last global operational space velocity command sent
+      Eigen::Vector3d _gxdd;									// global operational space acceleration 
+      Eigen::Vector3d _gxdd_des; 								// last global operational space acceleration command sent 
+      
+      Eigen::Matrix<double, NUM_CASTERS, 1> _q_steer; 	    // joint steering angles
+      Eigen::Matrix<double, NUM_MOTORS,  1> _qd; 		 		// joint velocities
+      Eigen::Matrix<double, NUM_MOTORS,  1> _qd_des; 	 	    // commanded joint velocities
+      Eigen::Matrix<double, NUM_MOTORS,  1> _tq; 		 		// joint torques
+      Eigen::Matrix<double, NUM_MOTORS,  1> _tq_des; 	 		// commanded joint torques
+      
+      Eigen::Vector3d _g_cf;    	 							// global control force
+      Eigen::Vector3d _cf_des_local; 							// local commanded control force
+      Eigen::Matrix3d _lambda; 								// vehicle mass matrix
+      Eigen::Vector3d _mu;     					 			// velocity coupling vector (centripetal,coriolis)
+      
+      Eigen::Matrix<double, NUM_MOTORS, 3> _C; 		 		// constraint matrix
+      Eigen::Matrix<double, NUM_MOTORS, 3> _Cp; 
+      Eigen::Matrix<double, NUM_MOTORS, NUM_MOTORS> _Jq; 		 					
+      Eigen::MatrixXd _C_pinv; 	 							// constraint matrix pseudoinverse (calculated -> dynamic size)		 	  		
+      
+      double _heading; 										// Vehicle heading (theta)
   };
 }
+
 #endif 

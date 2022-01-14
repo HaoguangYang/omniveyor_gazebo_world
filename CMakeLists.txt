@@ -19,7 +19,7 @@ find_package(Qt4)
 # QT 5.x
 find_package(Qt5 COMPONENTS Core Gui)
 find_package(Protobuf REQUIRED)
-
+find_package(Eigen3 REQUIRED NO_MODULE)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -259,4 +259,4 @@ target_link_libraries(gui_set_path ${GAZEBO_LIBRARIES}
     ${PROTOBUF_LIBRARIES})
 target_link_libraries(TrackedVehiclePlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
 target_link_libraries(SimpleTrackedVehiclePlugin_ROS TrackedVehiclePlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
-target_link_libraries(OmniVeyorPlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
+target_link_libraries(OmniVeyorPlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES} Eigen3::Eigen)
