@@ -93,7 +93,7 @@ void OmniVeyorPlugin::Load(physics::ModelPtr _model,
         1,
         boost::bind(&OmniVeyorPlugin::OnRosMsg, this, _1),
         ros::VoidPtr(), &this->rosQueue);
-  this->rosSub = this->rosNode->subscribe(so);
+  this->cmdVelSub = this->rosNode->subscribe(so);
 
   // Spin up the queue helper thread.
   this->rosQueueThread =
@@ -222,6 +222,21 @@ void OmniVeyorPlugin::controlUpdate(){
   _gx += _gxd * CONTROL_PERIOD_s;
 
   // publishes odometry
+  // ROS Code Goes Here.
+  current_time = ros::Time::now();
+  if ((current_time - odom.header.stamp).toSec()>=0.02){
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(_gx(2));
+    odom.header.stamp = current_time;
+    odom.pose.pose.position.x = _gx(0);//*cos_PI_4 + gx(1)*sin_PI_4;
+    odom.pose.pose.position.y = _gx(1);//*sin_PI_4 + gx(1)*cos_PI_4;
+    odom.pose.pose.orientation = odom_quat;
+    
+    odom.twist.twist.linear.x = _gxd(0);
+    odom.twist.twist.linear.y = _gxd(1);
+    odom.twist.twist.angular.z = _gxd(2);
+    
+    odomPub.publish(odom);
+  }
   // this->rosPub.publish();
   
   // control

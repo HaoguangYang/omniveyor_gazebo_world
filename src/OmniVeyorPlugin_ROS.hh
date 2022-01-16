@@ -36,6 +36,8 @@
 #include "ros/ros.h"
 #include "ros/callback_queue.h"
 #include "ros/subscribe_options.h"
+#include "tf/transform_broadcaster.h"
+#include "tf/transform_datatypes.h"
 #include "geometry_msgs/Twist.h"
 #include "nav_msgs/Odometry.h"
 #include <eigen3/Eigen/Core>
@@ -116,8 +118,8 @@ namespace gazebo
     private: std::unique_ptr<ros::NodeHandle> rosNode;
 
     /// \brief A ROS subscriber
-    private: ros::Subscriber rosSub;
-    private: ros::Publisher rosPub;
+    private: ros::Subscriber cmdVelSub;
+    private: ros::Publisher odomPub;
     /// \brief A ROS callbackqueue that helps process messages
     private: ros::CallbackQueue rosQueue;
 
@@ -132,12 +134,31 @@ namespace gazebo
       this->SetBodyVelocity(_msg->linear.x, _msg->linear.y, _msg->angular.z);
     }
 
+    private: nav_msgs::Odometry odom;
     /// \brief ROS helper function that processes messages
     private: void QueueThread()
     {
       //static const double timeout = 0.01;
       ros::WallDuration dt = ros::WallDuration(CONTROL_PERIOD_s);
-      this->rosPub = this->rosNode->advertise<nav_msgs::Odometry>("blah", 1);
+      this->odomPub = this->rosNode->advertise<nav_msgs::Odometry>("odom", 10);
+      odom.header.frame_id = "odom";
+      odom.child_frame_id = "base_link";
+      odom.pose.pose.position.z = 0.0;
+      odom.twist.twist.linear.z = 0.0;
+      odom.twist.twist.angular.x = 0.0;
+      odom.twist.twist.angular.y = 0.0;
+      odom.pose.covariance[0] = 0.01;
+      odom.pose.covariance[7] = 0.01;
+      odom.pose.covariance[14] = 0.01;
+      odom.pose.covariance[21] = 0.034;
+      odom.pose.covariance[28] = 0.034;
+      odom.pose.covariance[35] = 0.034;
+      odom.twist.covariance[0] = 0.1;
+      odom.twist.covariance[7] = 0.1;
+      odom.twist.covariance[14] = 0.1;
+      odom.twist.covariance[21] = 0.34;
+      odom.twist.covariance[28] = 0.34;
+      odom.twist.covariance[35] = 0.34;
       while (this->rosNode->ok())
       {
         this->controlUpdate();
@@ -184,6 +205,7 @@ namespace gazebo
       Eigen::MatrixXd _C_pinv; 	 							// constraint matrix pseudoinverse (calculated -> dynamic size)		 	  		
       
       double _heading; 										// Vehicle heading (theta)
+      ros::Time current_time;
   };
 }
 
