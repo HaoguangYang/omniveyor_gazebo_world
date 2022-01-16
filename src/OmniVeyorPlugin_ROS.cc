@@ -130,6 +130,16 @@ void OmniVeyorPlugin::Init()
   this->dataPtr->velocityTwistSub =
       this->dataPtr->robotNode->Subscribe<msgs::Twist, OmniVeyorPlugin>(
           "~/cmd_vel_twist", &OmniVeyorPlugin::OnVelMsg, this);
+  
+  // Joint velocity using joint motors
+  this->dataPtr->model->GetJoint("FL_steer")->SetParam("fmax", 0, 100.0);
+  this->dataPtr->model->GetJoint("FL_wheel_axle")->SetParam("fmax", 0, 500.0);
+  this->dataPtr->model->GetJoint("FR_steer")->SetParam("fmax", 0, 100.0);
+  this->dataPtr->model->GetJoint("FR_wheel_axle")->SetParam("fmax", 0, 500.0);
+  this->dataPtr->model->GetJoint("RL_steer")->SetParam("fmax", 0, 100.0);
+  this->dataPtr->model->GetJoint("RL_wheel_axle")->SetParam("fmax", 0, 500.0);
+  this->dataPtr->model->GetJoint("RR_steer")->SetParam("fmax", 0, 100.0);
+  this->dataPtr->model->GetJoint("RR_wheel_axle")->SetParam("fmax", 0, 500.0);
 }
 
 void OmniVeyorPlugin::Reset()
