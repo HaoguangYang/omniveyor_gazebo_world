@@ -22,7 +22,20 @@
 #include "gazebo/transport/transport.hh"
 #include "OmniVeyorPlugin_ROS.hh"
 
+#if BOOST_VERSION < 107400
+namespace std {
+template<class T>
+class hash<boost::shared_ptr<T>> {
+  public: size_t operator()(const boost::shared_ptr<T>& key) const {
+    return (size_t)key.get();
+  }
+};
+}
+#endif
+
 using namespace gazebo;
+
+GZ_REGISTER_MODEL_PLUGIN(OmniVeyorPlugin)
 
 /// \brief Private data class
 class gazebo::OmniVeyorPluginPrivate

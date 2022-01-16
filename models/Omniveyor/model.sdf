@@ -713,6 +713,7 @@
       <child>cam_d2_link</child>
       <parent>base_link</parent>
     </joint>
-
+    
+    <plugin filename="libOmniVeyorPlugin_ROS.so" name="omniveyor_simulator"/>
   </model>
 </sdf>
