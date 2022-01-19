@@ -1,0 +1,22 @@
+<?xml version='1.0'?>
+<sdf version='1.7'>
+  <model name='barFeeder'>
+    <static>1</static>
+    <link name='link'>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>barFeeder.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>barFeeder.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

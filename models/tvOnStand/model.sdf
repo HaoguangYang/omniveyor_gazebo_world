@@ -1,0 +1,53 @@
+<?xml version='1.0'?>
+<sdf version='1.7'>
+  <model name='tvOnStand'>
+    <static>1</static>
+    <link name='stand'>
+      <pose>0 0 0.18 0 -0 0</pose>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>tvStand.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+          <specular>0.01 0.01 0.01 1</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>tvStand.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+    
+    <link name='tv'>
+      <pose>0 -0.1 1.45 0 -0 0</pose>
+      <visual name='visual'>
+        <geometry>
+          <box>
+            <size>1.56 0.1 0.9</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+          <specular>0.01 0.01 0.01 1</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <box>
+            <size>1.56 0.1 0.9</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

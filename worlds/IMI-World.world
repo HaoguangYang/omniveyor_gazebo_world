@@ -48,6 +48,7 @@
     
     <include>
         <uri>model://IMIBuilding</uri>
+        <name>map</name>
     </include>
 
     <include>
@@ -194,49 +195,43 @@
     <include>
         <uri>model://cncLathe</uri>
         <name>cncLathe</name>
-        <pose>7 -3.5 0 0 -0 0</pose>
+        <pose>7 -3.7 0 0 -0 0</pose>
     </include>
 
     <include>
         <uri>model://tableTallIndus5ft</uri>
         <name>tableTallIndus5ft_LatheStation</name>
-        <pose>5.5 -6 0 0 -0 0</pose>
-    </include>
-    
-    <include>
-        <uri>model://tableTallIndus5ft</uri>
-        <name>tableTallIndus5ft_Fanuc1</name>
-        <pose>-3 5 0 0 -0 0</pose>
-    </include>
-    
-    <include>
-        <uri>model://tableTallIndus5ft</uri>
-        <name>tableTallIndus5ft_Fanuc2</name>
-        <pose>-1.3 5 0 0 -0 0</pose>
-    </include>
-    
-    <include>
-        <uri>model://tableTallIndus5ft</uri>
-        <name>tableTallIndus5ft_Fanuc3</name>
-        <pose>0.4 5 0 0 -0 0</pose>
+        <pose>5.5 -6.2 0 0 -0 0</pose>
     </include>
 
     <include>
         <uri>model://fanucLRMate200iD</uri>
         <name>fanucRobot1</name>
-        <pose>-3 5.5 1.04 0 0 0</pose>
+        <pose>-3 5.5 0 0 0 0</pose>
     </include>
 
     <include>
         <uri>model://fanucLRMate200iD</uri>
         <name>fanucRobot2</name>
-        <pose>-1.3 5.5 1.04 0 0 0</pose>
+        <pose>-1.3 5.5 0 0 0 0</pose>
     </include>
 
     <include>
         <uri>model://fanucLRMate200iD</uri>
         <name>fanucRobot3</name>
-        <pose>0.4 5.5 1.04 0 0 0</pose>
+        <pose>0.4 5.5 0 0 0 0</pose>
+    </include>
+    
+    <include>
+        <uri>model://barFeeder</uri>
+        <name>barFeeder</name>
+        <pose>6.8 -1.65 0 0 0 -1.57</pose>
+    </include>
+    
+    <include>
+        <uri>model://tvOnStand</uri>
+        <name>tvOnStand</name>
+        <pose>6 -1.6 0 0 0 -1.57</pose>
     </include>
 
     <include>
