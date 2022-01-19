@@ -25,7 +25,8 @@ Current status:
 - The differential-drive robot is set up for manually specifying joint commands in the Gazebo GUI.
 - The treaded robot is set up to receive Twist command from ROS. Try:
 ```sh
-rostopic pub /simple_tracked/cmd_vel_twist geometry_msgs/Twist "linear:
+rostopic pub /simple_tracked/cmd_vel_twist geometry_msgs/Twist
+"linear:
   x: 1.0
   y: 0.0
   z: 0.0
@@ -36,20 +37,20 @@ angular:
 ```
 - The OmniVeyor is set up with a full suite of LiDAR and camera sensors. Its motion is a testing Work In Progress. To control its motion and receive its wheel odometry, try:
 ```sh
-rostopic pub /omniveyor_robot/cmd_vel_twist geometry_msgs/Twist "linear:
-  x: 0.0
-  y: 0.0
-  z: 1.0
+rostopic pub /omniveyor_robot/mobile_base_controller/cmd_vel geometry_msgs/Twist 
+"linear:
+  x: 1.0
+  y: 1.0
+  z: 0.0
 angular:
   x: 0.0
   y: 0.0
-  z: 0.0" 
+  z: 1.0" 
 ```
 and
 ```sh
-rostopic echo /gazebo_client/odom
+rostopic echo /omniveyor_robot/odom
 ```
-The topics are subject to change since it is still a WIP.
 
 Troubleshooting:
 - If LiDAR returns all inf readings, your computer probably don't have a capable GPU to run GPU ray tracing. Change `models/Omniveyor/model.sdf` Lines 423 and 440 by removing the `gpu` strings, i.e.:
