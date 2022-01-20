@@ -61,6 +61,7 @@ and
 ```xml
 <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
 ```
+- If the robot initialized "Flying off", the solver failed to converge. Restart the simulation.
 
 Work In Progress:
 

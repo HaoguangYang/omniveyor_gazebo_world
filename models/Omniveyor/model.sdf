@@ -45,6 +45,12 @@
           </mesh>
         </geometry>
         <pose>-0.3752 0.3381 0.032 1.5708 -0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
       </visual>
     </link>
 
