@@ -86,6 +86,9 @@ void OmniVeyorPlugin::Load(physics::ModelPtr _model,
   this->LoadParam(_sdf, "robot_namespace", this->dataPtr->robotNamespace,
                   _model->GetName());
 
+  this->modelName = this->dataPtr->robotNamespace;
+  this->worldName = _model->GetWorld()->Name();
+
   // Initialize ros, if it has not already bee initialized.
   if (!ros::isInitialized())
   {
@@ -119,12 +122,12 @@ void OmniVeyorPlugin::Init()
 
   // Prepend world name to robot namespace if it isn't absolute.
   auto robotNamespace = this->GetRobotNamespace();
+
+  this->dataPtr->robotNode = transport::NodePtr(new transport::Node());
   if (!robotNamespace.empty() && robotNamespace.at(0) != '/')
   {
-    robotNamespace = this->dataPtr->model->GetWorld()->Name() +
-      "/" + robotNamespace;
+    robotNamespace = this->worldName + "/" + robotNamespace;
   }
-  this->dataPtr->robotNode = transport::NodePtr(new transport::Node());
   this->dataPtr->robotNode->Init(robotNamespace);
 
   this->dataPtr->velocityTwistSub =
@@ -140,6 +143,8 @@ void OmniVeyorPlugin::Init()
   this->dataPtr->model->GetJoint("RL_wheel_axle")->SetParam("fmax", 0, 500.0);
   this->dataPtr->model->GetJoint("RR_steer")->SetParam("fmax", 0, 100.0);
   this->dataPtr->model->GetJoint("RR_wheel_axle")->SetParam("fmax", 0, 500.0);
+
+  Reset();
 }
 
 void OmniVeyorPlugin::Reset()

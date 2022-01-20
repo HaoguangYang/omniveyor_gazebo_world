@@ -114,6 +114,7 @@ namespace gazebo
     /// \brief Private data pointer
     private: std::unique_ptr<OmniVeyorPluginPrivate> dataPtr;
 
+    private: std::string modelName, worldName;
     /// \brief A node use for ROS transport
     private: std::unique_ptr<ros::NodeHandle> rosNode;
 
@@ -140,7 +141,7 @@ namespace gazebo
     {
       //static const double timeout = 0.01;
       ros::WallDuration dt = ros::WallDuration(CONTROL_PERIOD_s);
-      this->odomPub = this->rosNode->advertise<nav_msgs::Odometry>("/" + this->dataPtr->model->GetName() + "/odom", 10);
+      this->odomPub = this->rosNode->advertise<nav_msgs::Odometry>("/" + this->modelName + "/odom", 10);
       odom.header.frame_id = "odom";
       odom.child_frame_id = "base_link";
       odom.pose.pose.position.z = 0.0;
