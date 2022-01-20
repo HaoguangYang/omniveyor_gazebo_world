@@ -105,7 +105,7 @@ void OmniVeyorPlugin::Load(physics::ModelPtr _model,
   // Create a named topic, and subscribe to it.
   ros::SubscribeOptions so =
     ros::SubscribeOptions::create<geometry_msgs::Twist>(
-        "/" + _model->GetName() + "/mobile_base_controller/cmd_vel",
+        "/" + _model->GetName() + "/cmd_vel",
         1,
         boost::bind(&OmniVeyorPlugin::OnRosMsg, this, _1),
         ros::VoidPtr(), &this->rosQueue);

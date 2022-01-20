@@ -1,4 +1,4 @@
-To run the Gazebo simulator:
+### To run the Gazebo simulator:
 
 ```sh
 # first make a catkin workspace if you haven't done so.
@@ -37,7 +37,7 @@ angular:
 ```
 - The OmniVeyor is set up with a full suite of LiDAR and camera sensors. Its motion is a testing Work In Progress. To control its motion and receive its wheel odometry, try:
 ```sh
-rostopic pub /omniveyor_robot/mobile_base_controller/cmd_vel geometry_msgs/Twist 
+rostopic pub /omniveyor_robot/cmd_vel geometry_msgs/Twist 
 "linear:
   x: 1.0
   y: 1.0
@@ -51,8 +51,11 @@ and
 ```sh
 rostopic echo /omniveyor_robot/odom
 ```
+- To fetch LiDAR scans, refer to the `/scan` topic.
+- To fetch camera RGB and depth images, refer to the `/cam_d1/depth/image_raw`, `/cam_d1/color/image_raw` topics, etc.
 
-Troubleshooting:
+### Troubleshooting:
+
 - If LiDAR returns all inf readings, your computer probably don't have a capable GPU to run GPU ray tracing. Change `models/Omniveyor/model.sdf` Lines 423 and 440 by removing the `gpu` strings, i.e.:
 ```xml
 <sensor name="laser" type="ray">
@@ -61,9 +64,10 @@ and
 ```xml
 <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
 ```
+- If the scene is dark
 - If the robot initialized "Flying off", the solver failed to converge. Restart the simulation.
 
-Work In Progress:
+### Work In Progress:
 
 - A plugin that publishes the name of object selected in Gazebo GUI.
 - Integration with the task dispatcher of the MobileManipulation software stack.
