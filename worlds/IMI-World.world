@@ -297,19 +297,19 @@
     <include>
         <uri>model://tableTallIndus5ft</uri>
         <name>tableTallIndus5ft_11</name>
-        <pose>10.75 -12.5 0 0 -0 0</pose>
+        <pose>10.75 -10.5 0 0 -0 0</pose>
     </include>
     
     <include>
         <uri>model://tableTallIndus5ft</uri>
         <name>tableTallIndus5ft_12</name>
-        <pose>9.05 -12.5 0 0 -0 0</pose>
+        <pose>9.05 -10.5 0 0 -0 0</pose>
     </include>
     
     <include>
         <uri>model://tableTallIndus5ft</uri>
         <name>tableTallIndus5ft_13</name>
-        <pose>14 -11.25 0 0 -0 1.57</pose>
+        <pose>12.45 -10.5 0 0 -0 0</pose>
     </include>
     
     <include>

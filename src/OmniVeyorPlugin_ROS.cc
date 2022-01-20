@@ -205,7 +205,7 @@ void OmniVeyorPlugin::SetBodyVelocity(
   std::lock_guard<std::mutex> lock(this->mutex);
 
   Eigen::Vector3d xd_com_in;
-  xd_com_in << _linearX, _linearY, _angular;
+  xd_com_in << _linearX, -_linearY, -_angular;
   _gxd_com = clampVelocity(xd_com_in);
 }
 
@@ -253,15 +253,15 @@ void OmniVeyorPlugin::controlUpdate(){
   // ROS Code Goes Here.
   current_time = ros::Time::now();
   if ((current_time - odom.header.stamp).toSec()>=0.02){
-    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(_gx(2));
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(-_gx(2));
     odom.header.stamp = current_time;
     odom.pose.pose.position.x = _gx(0);//*cos_PI_4 + gx(1)*sin_PI_4;
-    odom.pose.pose.position.y = _gx(1);//*sin_PI_4 + gx(1)*cos_PI_4;
+    odom.pose.pose.position.y = -_gx(1);//*sin_PI_4 + gx(1)*cos_PI_4;
     odom.pose.pose.orientation = odom_quat;
     
     odom.twist.twist.linear.x = _gxd(0);
-    odom.twist.twist.linear.y = _gxd(1);
-    odom.twist.twist.angular.z = _gxd(2);
+    odom.twist.twist.linear.y = -_gxd(1);
+    odom.twist.twist.angular.z = -_gxd(2);
     
     odomPub.publish(odom);
   }

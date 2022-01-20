@@ -9,7 +9,7 @@
           <mesh>
             <uri>CMM_Model.stl</uri>
             <!-- Inches to Meters -->
-            <scale>0.03937 0.03937 0.03937</scale>
+            <scale>0.0254 0.0254 0.0254</scale>
           </mesh>
         </geometry>
         <material>
@@ -23,7 +23,7 @@
         <geometry>
           <mesh>
             <uri>CMM_Model.stl</uri>
-            <scale>0.03937 0.03937 0.03937</scale>
+            <scale>0.0254 0.0254 0.0254</scale>
           </mesh>
         </geometry>
       </collision>
