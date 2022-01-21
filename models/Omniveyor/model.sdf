@@ -443,6 +443,11 @@
             <resolution>0.01</resolution>
           </range>
         </ray>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.005</stddev>
+        </noise>
         <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
           <topicName>/scan</topicName>
           <frameName>laser</frameName>
@@ -489,7 +494,7 @@
           <topicName>/cam_d1/imu</topicName>
           <bodyName>cam_d1_link</bodyName>
           <updateRateHZ>0.0</updateRateHZ>
-          <gaussianNoise>0.0</gaussianNoise>
+          <gaussianNoise>0.002</gaussianNoise>
           <xyzOffset>0 0 0</xyzOffset>
           <rpyOffset>0 0 0</rpyOffset>
           <frameName>cam_d1_link</frameName>
@@ -509,10 +514,11 @@
             <height>720</height>
             <format>R8G8B8</format>
           </image>
-          <clip>
-            <near>0.3</near>
-            <far>10</far>
-          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
         </camera>
         <plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
           <baseline>0.2</baseline>
@@ -525,8 +531,8 @@
           <cameraInfoTopicName>/cam_d1/color/camera_info</cameraInfoTopicName>
           <depthImageTopicName>/cam_d1/depth/image_raw</depthImageTopicName>
           <depthImageCameraInfoTopicName>/cam_d1/depth/camera_info</depthImageCameraInfoTopicName>
-          <pointCloudTopicName>/cam_d1/depth/points</pointCloudTopicName>
-          <frameName>cam_d1_link</frameName>
+          <pointCloudTopicName>/cam_d1/depth/color/points</pointCloudTopicName>
+          <frameName>cam_d1_depth_link</frameName>
           <pointCloudCutoff>0.3</pointCloudCutoff>
           <pointCloudCutoffMax>6.0</pointCloudCutoffMax>
           <distortionK1>0</distortionK1>
@@ -579,7 +585,7 @@
           <topicName>/cam_d2/imu</topicName>
           <bodyName>cam_d2_link</bodyName>
           <updateRateHZ>0.0</updateRateHZ>
-          <gaussianNoise>0.0</gaussianNoise>
+          <gaussianNoise>0.002</gaussianNoise>
           <xyzOffset>0 0 0</xyzOffset>
           <rpyOffset>0 0 0</rpyOffset>
           <frameName>cam_d2_link</frameName>
@@ -599,10 +605,11 @@
             <height>720</height>
             <format>R8G8B8</format>
           </image>
-          <clip>
-            <near>0.3</near>
-            <far>10</far>
-          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
         </camera>
         <plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
           <baseline>0.2</baseline>
@@ -615,8 +622,8 @@
           <cameraInfoTopicName>/cam_d2/color/camera_info</cameraInfoTopicName>
           <depthImageTopicName>/cam_d2/depth/image_raw</depthImageTopicName>
           <depthImageCameraInfoTopicName>/cam_d2/depth/camera_info</depthImageCameraInfoTopicName>
-          <pointCloudTopicName>/cam_d2/depth/points</pointCloudTopicName>
-          <frameName>cam_d2_link</frameName>
+          <pointCloudTopicName>/cam_d2/depth/color/points</pointCloudTopicName>
+          <frameName>cam_d2_depth_link</frameName>
           <pointCloudCutoff>0.3</pointCloudCutoff>
           <pointCloudCutoffMax>6.0</pointCloudCutoffMax>
           <distortionK1>0</distortionK1>
