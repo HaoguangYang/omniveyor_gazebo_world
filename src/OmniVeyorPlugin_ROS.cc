@@ -205,7 +205,7 @@ void OmniVeyorPlugin::SetBodyVelocity(
   std::lock_guard<std::mutex> lock(this->mutex);
 
   Eigen::Vector3d xd_com_in;
-  xd_com_in << _linearX, -_linearY, -_angular;
+  xd_com_in << _linearX, _linearY, _angular;
   _gxd_com = clampVelocity(xd_com_in);
 }
 
@@ -253,15 +253,15 @@ void OmniVeyorPlugin::controlUpdate(){
   // ROS Code Goes Here.
   current_time = ros::Time::now();
   if ((current_time - odom.header.stamp).toSec()>=0.02){
-    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(-_gx(2));
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(_gx(2));
     odom.header.stamp = current_time;
     odom.pose.pose.position.x = _gx(0);//*cos_PI_4 + gx(1)*sin_PI_4;
-    odom.pose.pose.position.y = -_gx(1);//*sin_PI_4 + gx(1)*cos_PI_4;
+    odom.pose.pose.position.y = _gx(1);//*sin_PI_4 + gx(1)*cos_PI_4;
     odom.pose.pose.orientation = odom_quat;
     
     odom.twist.twist.linear.x = _gxd(0);
-    odom.twist.twist.linear.y = -_gxd(1);
-    odom.twist.twist.angular.z = -_gxd(2);
+    odom.twist.twist.linear.y = _gxd(1);
+    odom.twist.twist.angular.z = _gxd(2);
     
     odomPub.publish(odom);
   }
@@ -278,27 +278,27 @@ void OmniVeyorPlugin::controlUpdate(){
   _qd_des = _C * _gxd_des;
   
   // TODO: Call the track velocity handler (which does the actual vehicle control).
-  this->SetMotorVelocity(_qd_des(0), _qd_des(1),
-                         _qd_des(2), _qd_des(3),
-                         _qd_des(6), _qd_des(7),
-                         _qd_des(4), _qd_des(5));
+  this->SetMotorVelocity(_qd_des(2), _qd_des(3),
+                         _qd_des(0), _qd_des(1),
+                         _qd_des(4), _qd_des(5),
+                         _qd_des(6), _qd_des(7),);
 }
 
 /* Update joint data */
 void OmniVeyorPlugin::updateJointData() 
 {
-  _q_steer(0) = this->dataPtr->model->GetJoint("FL_steer")->Position(0);
-  _q_steer(1) = this->dataPtr->model->GetJoint("FR_steer")->Position(0);
-  _q_steer(2) = this->dataPtr->model->GetJoint("RR_steer")->Position(0);
-  _q_steer(3) = this->dataPtr->model->GetJoint("RL_steer")->Position(0);
-  _qd(0) = this->dataPtr->model->GetJoint("FL_steer")->GetVelocity(0);
-  _qd(1) = this->dataPtr->model->GetJoint("FL_wheel_axle")->GetVelocity(0);
-  _qd(2) = this->dataPtr->model->GetJoint("FR_steer")->GetVelocity(0);
-  _qd(3) = this->dataPtr->model->GetJoint("FR_wheel_axle")->GetVelocity(0);
-  _qd(4) = this->dataPtr->model->GetJoint("RR_steer")->GetVelocity(0);
-  _qd(5) = this->dataPtr->model->GetJoint("RR_wheel_axle")->GetVelocity(0);
-  _qd(6) = this->dataPtr->model->GetJoint("RL_steer")->GetVelocity(0);
-  _qd(7) = this->dataPtr->model->GetJoint("RL_wheel_axle")->GetVelocity(0);
+  _q_steer(0) = this->dataPtr->model->GetJoint("FR_steer")->Position(0);
+  _q_steer(1) = this->dataPtr->model->GetJoint("FL_steer")->Position(0);
+  _q_steer(2) = this->dataPtr->model->GetJoint("RL_steer")->Position(0);
+  _q_steer(3) = this->dataPtr->model->GetJoint("RR_steer")->Position(0);
+  _qd(0) = this->dataPtr->model->GetJoint("FR_steer")->GetVelocity(0);
+  _qd(1) = this->dataPtr->model->GetJoint("FR_wheel_axle")->GetVelocity(0);
+  _qd(2) = this->dataPtr->model->GetJoint("FL_steer")->GetVelocity(0);
+  _qd(3) = this->dataPtr->model->GetJoint("FL_wheel_axle")->GetVelocity(0);
+  _qd(4) = this->dataPtr->model->GetJoint("RL_steer")->GetVelocity(0);
+  _qd(5) = this->dataPtr->model->GetJoint("RL_wheel_axle")->GetVelocity(0);
+  _qd(6) = this->dataPtr->model->GetJoint("RR_steer")->GetVelocity(0);
+  _qd(7) = this->dataPtr->model->GetJoint("RR_wheel_axle")->GetVelocity(0);
 }
 
 /* Update Moore-Penrose pseudoinverse of the constraint matrix C_p. Assumes constraint matrix, C#, is up to date */

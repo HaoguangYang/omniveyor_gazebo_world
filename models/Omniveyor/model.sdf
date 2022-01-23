@@ -648,7 +648,7 @@
       <child>FL_poweredCaster</child>
       <pose>0 0 0.032 0 0 0</pose>
       <axis>
-        <xyz>0 0 -1</xyz>
+        <xyz>0 0 1</xyz>
       </axis>
     </joint>
     <!-- Wheel revolute joints -->
@@ -666,7 +666,7 @@
       <child>FR_poweredCaster</child>
       <pose>0 0 0.032 0 0 0</pose>
       <axis>
-        <xyz>0 0 -1</xyz>
+        <xyz>0 0 1</xyz>
       </axis>
     </joint>
     <joint type="revolute" name="FR_wheel_axle">
@@ -683,7 +683,7 @@
       <child>RL_poweredCaster</child>
       <pose>0 0 0.032 0 0 0</pose>
       <axis>
-        <xyz>0 0 -1</xyz>
+        <xyz>0 0 1</xyz>
       </axis>
     </joint>
     <joint type="revolute" name="RL_wheel_axle">
@@ -700,7 +700,7 @@
       <child>RR_poweredCaster</child>
       <pose>0 0 0.032 0 0 0</pose>
       <axis>
-        <xyz>0 0 -1</xyz>
+        <xyz>0 0 1</xyz>
       </axis>
     </joint>
     <joint type="revolute" name="RR_wheel_axle">
