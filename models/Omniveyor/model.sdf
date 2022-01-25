@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<sdf version='1.7'>
+<sdf version='1.6'>
   <model name="omniveyor_robot">
     <!-- For debug purpose Only: When configuring the robot structure, 
          setting static to true such that the robot is ignored by the physics engine.

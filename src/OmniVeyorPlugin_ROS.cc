@@ -281,7 +281,7 @@ void OmniVeyorPlugin::controlUpdate(){
   this->SetMotorVelocity(_qd_des(2), _qd_des(3),
                          _qd_des(0), _qd_des(1),
                          _qd_des(4), _qd_des(5),
-                         _qd_des(6), _qd_des(7),);
+                         _qd_des(6), _qd_des(7));
 }
 
 /* Update joint data */
