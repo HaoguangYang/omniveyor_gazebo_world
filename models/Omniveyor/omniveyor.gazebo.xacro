@@ -1,13 +1,7 @@
-<?xml version='1.0'?>
-<sdf version='1.6'>
-  <model name="omniveyor_robot">
-    <!-- For debug purpose Only: When configuring the robot structure, 
-         setting static to true such that the robot is ignored by the physics engine.
-      -->
-    <!--static>true</static-->
-
-    <!-- Robot base_link -->
-    <link name='base_link'>
+<?xml version="1.0" ?>
+<robot name="omniveyor" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Robot base_link -->
+  <gazebo reference="base_link">
       <pose>0 0 0 0 0 0</pose>
       <inertial>
         <pose>0 0 0.192 0 0 0</pose>
@@ -30,13 +24,6 @@
         </geometry>
         <pose>-0.3752 0.3381 0.032 1.5708 -0 0</pose>
       </collision>
-      <!--visual name='visual'>
-        <geometry>
-          <box>
-            <size>0.62 0.62 0.32</size>
-          </box>
-        </geometry>
-      </visual-->
       <visual name='visual_mesh'>
         <geometry>
           <mesh>
@@ -52,8 +39,9 @@
           <emissive>0 0 0 1</emissive>
         </material>
       </visual>
-    </link>
+  </gazebo>
 
+  <gazebo>
     <!-- Powered Casters -->
     <link name="FL_wheel">
       <pose>0.1874 0.2074 0.05 0 1.5707 1.5707</pose>
@@ -389,8 +377,80 @@
       </visual>
     </link>
 
-    <link name="hokuyo">
-      <pose>0.27 0 0.08 0 0 0</pose>
+    <!-- Powerd Caster steering joints -->
+    <!-- sdf 1.7: Joints are expressed in CHILD frame by default -->
+    <!-- WARNING sdf 1.4: Joints are expressed in WORLD frame by default -->
+    <joint type="revolute" name="FL_steer">
+      <parent>base_link</parent>
+      <child>FL_poweredCaster</child>
+      <pose>0 0 0.032 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <!-- Wheel revolute joints -->
+    <joint type="revolute" name="FL_wheel_axle">
+      <parent>FL_poweredCaster</parent>
+      <child>FL_wheel</child>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    
+    <joint type="revolute" name="FR_steer">
+      <parent>base_link</parent>
+      <child>FR_poweredCaster</child>
+      <pose>0 0 0.032 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <joint type="revolute" name="FR_wheel_axle">
+      <parent>FR_poweredCaster</parent>
+      <child>FR_wheel</child>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    
+    <joint type="revolute" name="RL_steer">
+      <parent>base_link</parent>
+      <child>RL_poweredCaster</child>
+      <pose>0 0 0.032 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <joint type="revolute" name="RL_wheel_axle">
+      <parent>RL_poweredCaster</parent>
+      <child>RL_wheel</child>
+      <pose>-0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    
+    <joint type="revolute" name="RR_steer">
+      <parent>base_link</parent>
+      <child>RR_poweredCaster</child>
+      <pose>0 0 0.032 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <joint type="revolute" name="RR_wheel_axle">
+      <parent>RR_poweredCaster</parent>
+      <child>RR_wheel</child>
+      <pose>-0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+  </gazebo>
+
+  <gazebo reference="laser">
       <inertial>
         <mass>0.1</mass>
         <inertia>
@@ -403,6 +463,7 @@
         </inertia>
       </inertial>
       <visual name="visual">
+        <pose>0 0 -0.0175 0 0 0</pose>
         <geometry>
           <mesh>
             <uri>model://hokuyo/meshes/hokuyo.dae</uri>
@@ -410,7 +471,7 @@
         </geometry>
       </visual>
       <collision name="collision-base">
-        <pose>0 0 -0.0145 0 0 0</pose>
+        <pose>0 0 -0.032 0 0 0</pose>
         <geometry>
           <box>
             <size>0.05 0.05 0.041</size>
@@ -418,7 +479,7 @@
         </geometry>
       </collision>
       <collision name="collision-top">
-        <pose>0 0 0.0205 0 0 0</pose>
+        <pose>0 0 0.003 0 0 0</pose>
         <geometry>
           <cylinder>
             <radius>0.021</radius>
@@ -427,7 +488,7 @@
         </geometry>
       </collision>
       <sensor name="laser" type="gpu_ray">
-        <pose>0.01 0 0.0175 0 -0 0</pose>
+        <pose>0.01 0 0 0 -0 0</pose>
         <ray>
           <scan>
             <horizontal>
@@ -449,17 +510,16 @@
           <stddev>0.005</stddev>
         </noise>
         <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
-          <topicName>/scan</topicName>
+          <topicName>scan</topicName>
           <frameName>laser</frameName>
         </plugin>
         <always_on>1</always_on>
         <update_rate>40</update_rate>
         <visualize>true</visualize>
       </sensor>
-    </link>
+  </gazebo>
 
-    <link name="cam_d1_link">
-      <pose>0.285 0.08 0.376 0 0 0</pose>
+  <gazebo name="cam_d1_link">
       <inertial>
         <mass>0.2</mass>
         <inertia>
@@ -547,10 +607,9 @@
           <hackBaseline>0</hackBaseline>
         </plugin>
       </sensor>
-    </link>
+  </gazebo>
 
-    <link name="cam_d2_link">
-      <pose>-0.285 -0.08 0.376 0 0 3.14159</pose>
+  <gazebo reference="cam_d2_link">
       <inertial>
         <mass>0.2</mass>
         <inertia>
@@ -638,95 +697,37 @@
           <hackBaseline>0</hackBaseline>
         </plugin>
       </sensor>
-    </link>
+  </gazebo>
 
-    <!-- Powerd Caster steering joints -->
-    <!-- sdf 1.7: Joints are expressed in CHILD frame by default -->
-    <!-- WARNING sdf 1.4: Joints are expressed in WORLD frame by default -->
-    <joint type="revolute" name="FL_steer">
-      <parent>base_link</parent>
-      <child>FL_poweredCaster</child>
-      <pose>0 0 0.032 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <!-- Wheel revolute joints -->
-    <joint type="revolute" name="FL_wheel_axle">
-      <parent>FL_poweredCaster</parent>
-      <child>FL_wheel</child>
-      <pose>0 0 0 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
+  <gazebo reference="cam_t1_pose_frame">
+      <inertial>
+        <mass>0.2</mass>
+        <inertia>
+          <ixx>0.014395</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00384</iyy>
+          <iyz>0</iyz>
+          <izz>0.014136</izz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.008 0.13 0.02</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://intel_realsense_r200/meshes/realsense_r200.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+  </gazebo>
     
-    <joint type="revolute" name="FR_steer">
-      <parent>base_link</parent>
-      <child>FR_poweredCaster</child>
-      <pose>0 0 0.032 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <joint type="revolute" name="FR_wheel_axle">
-      <parent>FR_poweredCaster</parent>
-      <child>FR_wheel</child>
-      <pose>0 0 0 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    
-    <joint type="revolute" name="RL_steer">
-      <parent>base_link</parent>
-      <child>RL_poweredCaster</child>
-      <pose>0 0 0.032 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <joint type="revolute" name="RL_wheel_axle">
-      <parent>RL_poweredCaster</parent>
-      <child>RL_wheel</child>
-      <pose>-0 0 0 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    
-    <joint type="revolute" name="RR_steer">
-      <parent>base_link</parent>
-      <child>RR_poweredCaster</child>
-      <pose>0 0 0.032 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <joint type="revolute" name="RR_wheel_axle">
-      <parent>RR_poweredCaster</parent>
-      <child>RR_wheel</child>
-      <pose>-0 0 0 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-
-    <joint name="hokuyo_joint" type="fixed">
-      <child>hokuyo</child>
-      <parent>base_link</parent>
-    </joint>
-
-    <joint name="front_rs_joint" type="fixed">
-      <child>cam_d1_link</child>
-      <parent>base_link</parent>
-    </joint>
-
-    <joint name="rear_rs_joint" type="fixed">
-      <child>cam_d2_link</child>
-      <parent>base_link</parent>
-    </joint>
-    
+  <gazebo>
     <plugin filename="libOmniVeyorPlugin_ROS.so" name="omniveyor_simulator"/>
-  </model>
-</sdf>
+  </gazebo>
+</robot>
