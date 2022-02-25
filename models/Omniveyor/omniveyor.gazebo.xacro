@@ -1,494 +1,118 @@
 <?xml version="1.0" ?>
 <robot name="omniveyor" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- Robot base_link -->
+  <xacro:property name="steerAxisX" value="0.2074" />
+  <xacro:property name="steerAxisY" value="0.2074" />
+  <xacro:property name="pumpkinLength" value="0.2" />
+  <xacro:property name="forkLength" value="0.02" />
+  <xacro:property name="wheelRadius" value="0.05" />
+  <xacro:property name="steerAxisZ" value="${wheelRadius+pumpkinLength/2}" />
+
+  <!-- Powered Casters -->
+  <xacro:property name="one_pcv_caster">
+    <inertial>
+      <mass value="7.92"/>
+      <inertia ixx="0.0332" ixy="0" ixz="0"
+          iyy="0.0332" iyz="0" izz="0.02532"/>
+    </inertial>
+    <collision name="collision_p">
+      <geometry>
+        <cylinder radius="0.025" length="${pumpkinLength}"/>
+      </geometry>
+    </collision>
+    <collision name="collision_f">
+      <origin xyz="${-forkLength/2} 0 ${-pumpkinLength/2}" rpy="0 ${pi/2} 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="${forkLength}"/>
+      </geometry>
+    </collision>
+    <visual name="visual_p">
+      <geometry>
+        <cylinder radius="0.025" length="${pumpkinLength}"/>
+      </geometry>
+    </visual>
+    <visual name="visual_f">
+      <origin xyz="${-forkLength/2} 0 ${-pumpkinLength/2}" rpy="0 ${pi/2} 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="${forkLength}"/>
+      </geometry>
+    </visual>
+  </xacro:property>
+
+  <xacro:property name="one_pcv_wheel">
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.005" ixy="0" ixz="0"
+          iyy="0.005" iyz="0" izz="0.01"/>
+    </inertial>
+    <collision>
+      <geometry>
+        <cylinder radius="${wheelRadius}" length="0.015"/>
+      </geometry>
+    </collision>
+    <visual>
+      <geometry>
+        <cylinder radius="${wheelRadius}" length="0.015"/>
+      </geometry>
+      <material name="flat_black"/>
+    </visual>
+  </xacro:property>
+
+  <xacro:macro name="pcv_assembly" params="prefix">
+    <!-- Caster -->
+    <link name="${prefix}_poweredCaster">
+      <xacro:insert_block name="one_pcv_caster"/>
+    </link>
+    <!-- Wheel -->
+    <link name="${prefix}_wheel">
+      <xacro:insert_block name="one_pcv_wheel"/>
+    </link>
+    <gazebo reference="${prefix}_wheel">
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <slip1>0.0001</slip1>
+      <slip2>0.0001</slip2>
+      <material>Gazebo/FlatBlack</material>
+    </gazebo>
+    <!-- Steering joint -->
+    <joint type="continuous" name="${prefix}_steer">
+      <parent link="base_link"/>
+      <child link="${prefix}_poweredCaster"/>
+      <xacro:if value="${prefix == 'FL'}">
+      <origin xyz="${steerAxisX} ${steerAxisY} ${steerAxisZ}" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:if value="${prefix == 'FR'}">
+      <origin xyz="${steerAxisX} ${-steerAxisY} ${steerAxisZ}" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:if value="${prefix == 'RL'}">
+      <origin xyz="${-steerAxisX} ${steerAxisY} ${steerAxisZ}" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:if value="${prefix == 'RR'}">
+      <origin xyz="${-steerAxisX} ${-steerAxisY} ${steerAxisZ}" rpy="0 0 0"/>
+      </xacro:if>
+      <axis xyz="0 0 1"/>
+    </joint>
+    <!-- Rolling joint -->
+    <joint type="continuous" name="${prefix}_wheel_axle">
+      <parent link="${prefix}_poweredCaster"/>
+      <child link="${prefix}_wheel"/>
+      <origin xyz="${-forkLength} 0 ${-pumpkinLength/2}" rpy="0 ${pi/2} ${pi/2}"/>
+      <axis xyz="0 0 1"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Powerd Caster steering joints -->
+  <xacro:pcv_assembly prefix="FL"/>
+  <xacro:pcv_assembly prefix="FR"/>
+  <xacro:pcv_assembly prefix="RL"/>
+  <xacro:pcv_assembly prefix="RR"/>
+  
   <gazebo reference="base_link">
-      <pose>0 0 0 0 0 0</pose>
-      <inertial>
-        <pose>0 0 0.192 0 0 0</pose>
-        <mass>29.82</mass>
-        <inertia>
-            <ixx>1.209698</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>1.209698</iyy>
-            <iyz>0</iyz>
-            <izz>1.910468</izz>
-        </inertia>
-      </inertial>
-      <collision name='collision'>
-        <geometry>
-          <mesh>
-            <uri>OV_Shell.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-          </mesh>
-        </geometry>
-        <pose>-0.3752 0.3381 0.032 1.5708 -0 0</pose>
-      </collision>
-      <visual name='visual_mesh'>
-        <geometry>
-          <mesh>
-            <uri>OV_Shell.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-          </mesh>
-        </geometry>
-        <pose>-0.3752 0.3381 0.032 1.5708 -0 0</pose>
-        <material>
-          <ambient>0.1 0.1 0.1 1</ambient>
-          <diffuse>0.3 0.3 0.3 1</diffuse>
-          <specular>0 0 0 0</specular>
-          <emissive>0 0 0 1</emissive>
-        </material>
-      </visual>
-  </gazebo>
-
-  <gazebo>
-    <!-- Powered Casters -->
-    <link name="FL_wheel">
-      <pose>0.1874 0.2074 0.05 0 1.5707 1.5707</pose>
-      <collision name="collision">
-        <geometry>
-          <cylinder>
-            <radius>0.05</radius>
-            <length>0.015</length>
-          </cylinder>
-        </geometry>
-        <surface>
-          <friction>
-            <ode>
-              <mu>0.9</mu>
-              <mu2>0.9</mu2>
-              <slip1>0.0001</slip1>
-              <slip2>0.0001</slip2>
-            </ode>
-          </friction>
-        </surface>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.05</radius>
-            <length>0.015</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.1 0.1 1</ambient>
-          <diffuse>0.1 0.1 0.1 1</diffuse>
-          <specular>0 0 0 0</specular>
-          <emissive>0 0 0 1</emissive>
-        </material>
-      </visual>
-    </link>
-    <link name="FL_poweredCaster">
-      <pose>0.2074 0.2074 0.15 0 0 0</pose>
-      <inertial>
-        <mass>7.92</mass>
-        <inertia>
-            <ixx>0.0332</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.0332</iyy>
-            <iyz>0</iyz>
-            <izz>0.02532</izz>
-        </inertia>
-      </inertial>
-      <collision name="collision_p">
-        <geometry>
-          <cylinder>
-            <radius>0.025</radius>
-            <length>0.22</length>
-          </cylinder>
-        </geometry>
-      </collision>
-      <collision name="collision_f">
-        <pose>-0.01 0 -0.1 0 1.5707 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.01</radius>
-            <length>0.02</length>
-          </cylinder>
-        </geometry>
-      </collision>
-      <visual name="visual_p">
-        <geometry>
-          <cylinder>
-            <radius>0.025</radius>
-            <length>0.22</length>
-          </cylinder>
-        </geometry>
-      </visual>
-      <visual name="visual_f">
-        <pose>-0.01 0 -0.1 0 1.5707 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.01</radius>
-            <length>0.02</length>
-          </cylinder>
-        </geometry>
-      </visual>
-    </link>
-    
-    <link name="FR_wheel">
-      <pose>0.1874 -0.2074 0.05 0 1.5707 1.5707</pose>
-      <collision name="collision">
-        <geometry>
-          <cylinder>
-            <radius>0.05</radius>
-            <length>0.015</length>
-          </cylinder>
-        </geometry>
-        <surface>
-          <friction>
-            <mu>0.9</mu>
-            <mu2>0.9</mu2>
-            <slip1>0.0001</slip1>
-            <slip2>0.0001</slip2>
-          </friction>
-        </surface>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.05</radius>
-            <length>0.015</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.1 0.1 1</ambient>
-          <diffuse>0.1 0.1 0.1 1</diffuse>
-          <specular>0 0 0 0</specular>
-          <emissive>0 0 0 1</emissive>
-        </material>
-      </visual>
-    </link>
-    <link name="FR_poweredCaster">
-      <pose>0.2074 -0.2074 0.15 0 0 0</pose>
-      <inertial>
-        <mass>7.92</mass>
-        <inertia>
-            <ixx>0.0332</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.0332</iyy>
-            <iyz>0</iyz>
-            <izz>0.02532</izz>
-        </inertia>
-      </inertial>
-      <collision name="collision_p">
-        <geometry>
-          <cylinder>
-            <radius>0.025</radius>
-            <length>0.22</length>
-          </cylinder>
-        </geometry>
-      </collision>
-      <collision name="collision_f">
-        <pose>-0.01 0 -0.1 0 1.5707 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.01</radius>
-            <length>0.02</length>
-          </cylinder>
-        </geometry>
-      </collision>
-      <visual name="visual_p">
-        <geometry>
-          <cylinder>
-            <radius>0.025</radius>
-            <length>0.22</length>
-          </cylinder>
-        </geometry>
-      </visual>
-      <visual name="visual_f">
-        <pose>-0.01 0 -0.1 0 1.5707 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.01</radius>
-            <length>0.02</length>
-          </cylinder>
-        </geometry>
-      </visual>
-    </link>
-
-    <link name="RL_wheel">
-      <pose>-0.2274 0.2074 0.05 0 1.5707 1.5707</pose>
-      <collision name="collision">
-        <geometry>
-          <cylinder>
-            <radius>0.05</radius>
-            <length>0.015</length>
-          </cylinder>
-        </geometry>
-        <surface>
-          <friction>
-            <ode>
-              <mu>0.9</mu>
-              <mu2>0.9</mu2>
-              <slip1>0.0001</slip1>
-              <slip2>0.0001</slip2>
-            </ode>
-          </friction>
-        </surface>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.05</radius>
-            <length>0.015</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.1 0.1 1</ambient>
-          <diffuse>0.1 0.1 0.1 1</diffuse>
-          <specular>0 0 0 0</specular>
-          <emissive>0 0 0 1</emissive>
-        </material>
-      </visual>
-    </link>
-    <link name="RL_poweredCaster">
-      <pose>-0.2074 0.2074 0.15 0 0 0</pose>
-      <inertial>
-        <mass>7.92</mass>
-        <inertia>
-            <ixx>0.0332</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.0332</iyy>
-            <iyz>0</iyz>
-            <izz>0.02532</izz>
-        </inertia>
-      </inertial>
-      <collision name="collision_p">
-        <geometry>
-          <cylinder>
-            <radius>0.025</radius>
-            <length>0.22</length>
-          </cylinder>
-        </geometry>
-      </collision>
-      <collision name="collision_f">
-        <pose>-0.01 0 -0.1 0 1.5707 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.01</radius>
-            <length>0.02</length>
-          </cylinder>
-        </geometry>
-      </collision>
-      <visual name="visual_p">
-        <geometry>
-          <cylinder>
-            <radius>0.025</radius>
-            <length>0.22</length>
-          </cylinder>
-        </geometry>
-      </visual>
-      <visual name="visual_f">
-        <pose>-0.01 0 -0.1 0 1.5707 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.01</radius>
-            <length>0.02</length>
-          </cylinder>
-        </geometry>
-      </visual>
-    </link>
-
-    <link name="RR_wheel">
-      <pose>-0.2274 -0.2074 0.05 0 1.5707 1.5707</pose>
-      <collision name="collision">
-        <geometry>
-          <cylinder>
-            <radius>0.05</radius>
-            <length>0.015</length>
-          </cylinder>
-        </geometry>
-        <surface>
-          <friction>
-            <ode>
-              <mu>0.9</mu>
-              <mu2>0.9</mu2>
-              <slip1>0.0001</slip1>
-              <slip2>0.0001</slip2>
-            </ode>
-          </friction>
-        </surface>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <cylinder>
-            <radius>0.05</radius>
-            <length>0.015</length>
-          </cylinder>
-        </geometry>
-        <material>
-          <ambient>0.1 0.1 0.1 1</ambient>
-          <diffuse>0.1 0.1 0.1 1</diffuse>
-          <specular>0 0 0 0</specular>
-          <emissive>0 0 0 1</emissive>
-        </material>
-      </visual>
-    </link>
-    <link name="RR_poweredCaster">
-      <pose>-0.2074 -0.2074 0.15 0 0 0</pose>
-      <inertial>
-        <mass>7.92</mass>
-        <inertia>
-            <ixx>0.0332</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.0332</iyy>
-            <iyz>0</iyz>
-            <izz>0.02532</izz>
-        </inertia>
-      </inertial>
-      <collision name="collision_p">
-        <geometry>
-          <cylinder>
-            <radius>0.025</radius>
-            <length>0.22</length>
-          </cylinder>
-        </geometry>
-      </collision>
-      <collision name="collision_f">
-        <pose>-0.01 0 -0.1 0 1.5707 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.01</radius>
-            <length>0.02</length>
-          </cylinder>
-        </geometry>
-      </collision>
-      <visual name="visual_p">
-        <geometry>
-          <cylinder>
-            <radius>0.025</radius>
-            <length>0.22</length>
-          </cylinder>
-        </geometry>
-      </visual>
-      <visual name="visual_f">
-        <pose>-0.01 0 -0.1 0 1.5707 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.01</radius>
-            <length>0.02</length>
-          </cylinder>
-        </geometry>
-      </visual>
-    </link>
-
-    <!-- Powerd Caster steering joints -->
-    <!-- sdf 1.7: Joints are expressed in CHILD frame by default -->
-    <!-- WARNING sdf 1.4: Joints are expressed in WORLD frame by default -->
-    <joint type="revolute" name="FL_steer">
-      <parent>base_link</parent>
-      <child>FL_poweredCaster</child>
-      <pose>0 0 0.032 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <!-- Wheel revolute joints -->
-    <joint type="revolute" name="FL_wheel_axle">
-      <parent>FL_poweredCaster</parent>
-      <child>FL_wheel</child>
-      <pose>0 0 0 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    
-    <joint type="revolute" name="FR_steer">
-      <parent>base_link</parent>
-      <child>FR_poweredCaster</child>
-      <pose>0 0 0.032 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <joint type="revolute" name="FR_wheel_axle">
-      <parent>FR_poweredCaster</parent>
-      <child>FR_wheel</child>
-      <pose>0 0 0 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    
-    <joint type="revolute" name="RL_steer">
-      <parent>base_link</parent>
-      <child>RL_poweredCaster</child>
-      <pose>0 0 0.032 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <joint type="revolute" name="RL_wheel_axle">
-      <parent>RL_poweredCaster</parent>
-      <child>RL_wheel</child>
-      <pose>-0 0 0 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    
-    <joint type="revolute" name="RR_steer">
-      <parent>base_link</parent>
-      <child>RR_poweredCaster</child>
-      <pose>0 0 0.032 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <joint type="revolute" name="RR_wheel_axle">
-      <parent>RR_poweredCaster</parent>
-      <child>RR_wheel</child>
-      <pose>-0 0 0 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
+    <material>Gazebo/DarkGrey</material>
   </gazebo>
 
   <gazebo reference="laser">
-      <inertial>
-        <mass>0.1</mass>
-        <inertia>
-          <ixx>0.01</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>0.01</iyy>
-          <iyz>0</iyz>
-          <izz>0.01</izz>
-        </inertia>
-      </inertial>
-      <visual name="visual">
-        <pose>0 0 -0.0175 0 0 0</pose>
-        <geometry>
-          <mesh>
-            <uri>model://hokuyo/meshes/hokuyo.dae</uri>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="collision-base">
-        <pose>0 0 -0.032 0 0 0</pose>
-        <geometry>
-          <box>
-            <size>0.05 0.05 0.041</size>
-          </box>
-        </geometry>
-      </collision>
-      <collision name="collision-top">
-        <pose>0 0 0.003 0 0 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.021</radius>
-            <length>0.029</length>
-          </cylinder>
-        </geometry>
-      </collision>
       <sensor name="laser" type="gpu_ray">
-        <pose>0.01 0 0 0 -0 0</pose>
+        <pose>0 0 0 0 -0 0</pose>
         <ray>
           <scan>
             <horizontal>
@@ -519,32 +143,7 @@
       </sensor>
   </gazebo>
 
-  <gazebo name="cam_d1_link">
-      <inertial>
-        <mass>0.2</mass>
-        <inertia>
-          <ixx>0.014395</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>0.00384</iyy>
-          <iyz>0</iyz>
-          <izz>0.014136</izz>
-        </inertia>
-      </inertial>
-      <collision name="collision">
-        <geometry>
-          <box>
-            <size>0.008 0.13 0.02</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <uri>model://intel_realsense_r200/meshes/realsense_r200.dae</uri>
-          </mesh>
-        </geometry>
-      </visual>
+  <gazebo reference="cam_d1_link">
       <sensor name="imu_sensor" type="imu">
         <gravity>true</gravity>
         <always_on>true</always_on>
@@ -610,31 +209,6 @@
   </gazebo>
 
   <gazebo reference="cam_d2_link">
-      <inertial>
-        <mass>0.2</mass>
-        <inertia>
-          <ixx>0.014395</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>0.00384</iyy>
-          <iyz>0</iyz>
-          <izz>0.014136</izz>
-        </inertia>
-      </inertial>
-      <collision name="collision">
-        <geometry>
-          <box>
-            <size>0.008 0.13 0.02</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <uri>model://intel_realsense_r200/meshes/realsense_r200.dae</uri>
-          </mesh>
-        </geometry>
-      </visual>
       <sensor name="imu_sensor" type="imu">
         <always_on>true</always_on>
         <update_rate>100</update_rate>
@@ -699,34 +273,6 @@
       </sensor>
   </gazebo>
 
-  <gazebo reference="cam_t1_pose_frame">
-      <inertial>
-        <mass>0.2</mass>
-        <inertia>
-          <ixx>0.014395</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>0.00384</iyy>
-          <iyz>0</iyz>
-          <izz>0.014136</izz>
-        </inertia>
-      </inertial>
-      <collision name="collision">
-        <geometry>
-          <box>
-            <size>0.008 0.13 0.02</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <uri>model://intel_realsense_r200/meshes/realsense_r200.dae</uri>
-          </mesh>
-        </geometry>
-      </visual>
-  </gazebo>
-    
   <gazebo>
     <plugin filename="libOmniVeyorPlugin_ROS.so" name="omniveyor_simulator"/>
   </gazebo>
