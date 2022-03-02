@@ -1,0 +1,4 @@
+- git:
+    local-name: omniveyor_common
+    uri: https://github.com/HaoguangYang/omniveyor_common.git
+    version: master 

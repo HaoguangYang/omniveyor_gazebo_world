@@ -56,12 +56,6 @@
         <uri>model://IMIBuilding</uri>
         <name>map</name>
     </include>
-
-    <!--include>
-        <uri>model://Omniveyor</uri>
-        <name>omniveyor_robot</name>
-        <pose>0 0 0 0 0 0</pose>
-    </include-->
     
     <include>
         <uri>model://tread_drv_robot</uri>

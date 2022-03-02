@@ -7,6 +7,7 @@ mkdir -p ./ros_ws/src
 cd ./ros_ws/src
 git clone https://github.com/HaoguangYang/omniveyor_gazebo_world.git
 cd ..
+rosinstall ./src ./src/omniveyor_gazebo_world/omniveyor_gazebo_world.rosinstall
 # compile the package.
 catkin_make
 ```

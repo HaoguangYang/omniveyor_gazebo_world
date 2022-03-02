@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   geometry_msgs
+  omniveyor_common
 )
 find_package(gazebo REQUIRED)
 # QT 4.x
