@@ -31,7 +31,7 @@
 #include "gazebo/common/Assert.hh"
 #include "gazebo/transport/transport.hh"
 
-#include "SimpleTrackedVehiclePlugin_ROS.hh"
+#include "omniveyor_gazebo_world/SimpleTrackedVehiclePlugin_ROS.hh"
 
 // ------------- HEADER PATCH FOR HACK ON LINE 653 -------------
 struct dBase {

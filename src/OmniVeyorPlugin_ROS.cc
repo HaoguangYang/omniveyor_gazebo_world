@@ -20,7 +20,7 @@
 
 #include "gazebo/common/Assert.hh"
 #include "gazebo/transport/transport.hh"
-#include "OmniVeyorPlugin_ROS.hh"
+#include "omniveyor_gazebo_world/OmniVeyorPlugin_ROS.hh"
 
 #if BOOST_VERSION < 107400
 namespace std {
@@ -105,7 +105,7 @@ void OmniVeyorPlugin::Load(physics::ModelPtr _model,
   // Create a named topic, and subscribe to it.
   ros::SubscribeOptions so =
     ros::SubscribeOptions::create<geometry_msgs::Twist>(
-        "/mobile_base_controller/cmd_vel",
+        "cmd_vel",
         1,
         boost::bind(&OmniVeyorPlugin::OnRosMsg, this, _1),
         ros::VoidPtr(), &this->rosQueue);

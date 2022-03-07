@@ -6,7 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <gazebo/msgs/msgs.hh>
-#include "GUISetPath.hh"
+#include "omniveyor_gazebo_world/GUISetPath.hh"
 #include "string"
 #include "std_msgs/String.h"
 #include "list"

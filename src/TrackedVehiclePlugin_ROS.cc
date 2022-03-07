@@ -20,7 +20,7 @@
 
 #include "gazebo/common/Assert.hh"
 #include "gazebo/transport/transport.hh"
-#include "TrackedVehiclePlugin_ROS.hh"
+#include "omniveyor_gazebo_world/TrackedVehiclePlugin_ROS.hh"
 
 using namespace gazebo;
 

@@ -12,6 +12,14 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   geometry_msgs
+  gazebo_msgs
+  gazebo_ros
+  gazebo_ros_control
+  gazebo_plugins
+  joint_state_publisher
+  kdl_parser
+  robot_state_publisher
+  tf
   omniveyor_common
 )
 find_package(gazebo REQUIRED)
@@ -112,9 +120,9 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+   INCLUDE_DIRS include
 #  LIBRARIES gazebo_click
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+   CATKIN_DEPENDS roscpp rospy std_msgs omniveyor_common
 #  DEPENDS system_lib
 )
 
@@ -125,7 +133,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -229,35 +237,38 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 # QT 4.x
 if (Qt4_FOUND)
-    QT4_WRAP_CPP(headers_MOC src/GUISetPath.hh)
+    QT4_WRAP_CPP(headers_MOC include/omniveyor_gazebo_world/GUISetPath.hh)
 elseif (Qt5_FOUND)
 # QT 5.x
-    QT5_WRAP_CPP(headers_MOC src/GUISetPath.hh)
+    QT5_WRAP_CPP(headers_MOC include/omniveyor_gazebo_world/GUISetPath.hh)
 else()
     message( FATAL_ERROR "No QT installation found, CMake will exit." )
+endif()
+
+if (Qt5_FOUND)
+    list (APPEND Qt_LIBRARIES "Qt5::Gui" "Qt5::Core")
 endif()
 
 add_executable(listener src/listener.cc)
 target_link_libraries(listener ${GAZEBO_LIBRARIES} pthread)
 target_link_libraries(listener ${catkin_LIBRARIES})
-
 add_library(gui_set_path SHARED ${headers_MOC}
   src/GUISetPath.cc)
-add_library(TrackedVehiclePlugin_ROS SHARED
-  src/TrackedVehiclePlugin_ROS.cc)
-add_library(SimpleTrackedVehiclePlugin_ROS SHARED
-  src/SimpleTrackedVehiclePlugin_ROS.cc)
-  
-add_library(OmniVeyorPlugin_ROS SHARED
-  src/OmniVeyorPlugin_ROS.cc)
-  
-if (Qt5_FOUND)
-    list (APPEND Qt_LIBRARIES "Qt5::Gui" "Qt5::Core")
-endif()
-
 target_link_libraries(gui_set_path ${GAZEBO_LIBRARIES}
     ${Qt_LIBRARIES}
     ${PROTOBUF_LIBRARIES})
+  
+add_library(gazebo_2Dmap_plugin SHARED src/gazebo_2Dmap_plugin.cpp)
+target_link_libraries(gazebo_2Dmap_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+add_library(TrackedVehiclePlugin_ROS SHARED
+  src/TrackedVehiclePlugin_ROS.cc)
 target_link_libraries(TrackedVehiclePlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
+add_library(SimpleTrackedVehiclePlugin_ROS SHARED
+  src/SimpleTrackedVehiclePlugin_ROS.cc)
 target_link_libraries(SimpleTrackedVehiclePlugin_ROS TrackedVehiclePlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
+
+add_library(OmniVeyorPlugin_ROS SHARED
+  src/OmniVeyorPlugin_ROS.cc)
 target_link_libraries(OmniVeyorPlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES} Eigen3::Eigen)
+
