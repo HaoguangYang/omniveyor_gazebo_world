@@ -4,10 +4,8 @@
 # first make a catkin workspace if you haven't done so.
 source /opt/ros/noetic/setup.bash   # if you haven't done so.
 mkdir -p ./ros_ws/src
-cd ./ros_ws/src
-git clone https://github.com/HaoguangYang/omniveyor_gazebo_world.git
-cd ..
-rosinstall ./src ./src/omniveyor_gazebo_world/omniveyor_gazebo_world.rosinstall
+cd ./ros_ws
+rosinstall ./src https://raw.githubusercontent.com/HaoguangYang/omniveyor_gazebo_world/master/omniveyor_gazebo_world.rosinstall
 # compile the package.
 catkin_make
 ```

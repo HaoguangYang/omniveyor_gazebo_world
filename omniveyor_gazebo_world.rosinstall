@@ -2,3 +2,13 @@
     local-name: omniveyor_common
     uri: https://github.com/HaoguangYang/omniveyor_common.git
     version: master 
+
+- git:
+    local-name: omniveyor_simulator/omniveyor_gazebo_world
+    uri: https://github.com/HaoguangYang/omniveyor_gazebo_world.git
+    version: master
+
+- git:
+    local-name: omniveyor_simulator/realsense_ros_gazebo
+    uri: https://github.com/nilseuropa/realsense_ros_gazebo.git
+    version: master
