@@ -2,6 +2,7 @@
 <arg name="robot_name" default=""/>
 <arg name="x" default="0.0"/>
 <arg name="y" default="0.0"/>
+<param name="/use_sim_time" value="true" />
 
 <group ns="/$(arg robot_name)">
   <param name="tf_prefix" value="$(arg robot_name)" />
@@ -21,6 +22,25 @@
   </group>
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  
+  <node pkg="tf2_ros" type="static_transform_publisher" name="cam_t1_odom_link" args="0 0 0 0 0 0 odom cam_t1_odom_frame"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="world_link_tf" args="0 0 0 0 0 0 odom world"/>
+  
+  <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter">
+    <param name="use_mag"               value="false"/>
+    <param name="publish_tf"            value="false"/>
+    <param name="world_frame"           value="enu"/>
+    <remap from="/imu/data_raw"         to="/cam_t1/imu"/>
+    <remap from="/imu/data"             to="/cam_t1/imu_filtered"/>
+  </node>
+  
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_odom" clear_params="true">
+    <rosparam command="load" file="$(find pcv_base)/resources/cfg/ekf_odom.yaml" />
+    <remap from="odometry/filtered" to="odom/filtered"/>
+    <!--  Placeholder for output topic remapping
+    <remap from="accel/filtered" to=""/>
+    -->
+  </node>
   
   <group ns="cam_d1/color/image_raw/" >
     <rosparam param="disable_pub_plugins">

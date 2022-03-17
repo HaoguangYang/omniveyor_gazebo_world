@@ -40,6 +40,7 @@
 #include "tf/transform_datatypes.h"
 #include "geometry_msgs/Twist.h"
 #include "nav_msgs/Odometry.h"
+#include "std_msgs/Byte.h"
 #include <Eigen/Core>
 #include <Eigen/QR>
 #include <Eigen/Geometry>
@@ -120,6 +121,7 @@ namespace gazebo
 
     /// \brief A ROS subscriber
     private: ros::Subscriber cmdVelSub;
+    private: ros::Subscriber ctrlModeSub;
     private: ros::Publisher odomPub;
     /// \brief A ROS callbackqueue that helps process messages
     private: ros::CallbackQueue rosQueue;
@@ -134,13 +136,18 @@ namespace gazebo
     {
       this->SetBodyVelocity(_msg->linear.x, _msg->linear.y, _msg->angular.z);
     }
+    public: void OnModeMsg(const std_msgs::ByteConstPtr &_msg)
+    {
+      if (_msg->data==0)
+        this->SetBodyVelocity(0., 0., 0.);
+    }
 
     private: nav_msgs::Odometry odom;
     /// \brief ROS helper function that processes messages
     private: void QueueThread()
     {
       //static const double timeout = 0.01;
-      ros::WallDuration dt = ros::WallDuration(CONTROL_PERIOD_s);
+      ros::Rate rate(1./CONTROL_PERIOD_s);
       this->odomPub = this->rosNode->advertise<nav_msgs::Odometry>("odom", 10);
       odom.header.frame_id = "odom";
       odom.child_frame_id = "base_link";
@@ -163,7 +170,7 @@ namespace gazebo
       while (this->rosNode->ok())
       {
         this->controlUpdate();
-        dt.sleep();
+        rate.sleep();
         this->rosQueue.callAvailable();
       }
     }

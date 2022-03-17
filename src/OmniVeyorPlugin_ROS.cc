@@ -112,6 +112,13 @@ void OmniVeyorPlugin::Load(physics::ModelPtr _model,
         boost::bind(&OmniVeyorPlugin::OnRosMsg, this, _1),
         ros::VoidPtr(), &this->rosQueue);
   this->cmdVelSub = this->rosNode->subscribe(so);
+  ros::SubscribeOptions so2 =
+    ros::SubscribeOptions::create<std_msgs::Byte>(
+        "control_mode",
+        1,
+        boost::bind(&OmniVeyorPlugin::OnModeMsg, this, _1),
+        ros::VoidPtr(), &this->rosQueue);
+  this->ctrlModeSub = this->rosNode->subscribe(so2);
 
   // Spin up the queue helper thread.
   this->rosQueueThread =
