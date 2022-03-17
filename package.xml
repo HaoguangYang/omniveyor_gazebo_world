@@ -59,7 +59,7 @@
   <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
-  <exec_depend>realsense_ros_gazebo</exec_depend>
+  <exec_depend>realsense2_description</exec_depend>
   <exec_depend>omniveyor_common</exec_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>

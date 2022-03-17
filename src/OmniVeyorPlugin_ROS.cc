@@ -83,9 +83,11 @@ void OmniVeyorPlugin::Load(physics::ModelPtr _model,
   this->dataPtr->sdf = _sdf;
 
   // Load parameters from SDF plugin contents.
-  this->LoadParam(_sdf, "robot_namespace", this->dataPtr->robotNamespace,
-                  _model->GetName());
-
+  this->dataPtr->robotNamespace = "";
+  if (_sdf->HasElement("robotNamespace"))
+    this->dataPtr->robotNamespace =
+      _sdf->GetElement("robotNamespace")->Get<std::string>() + "/";
+  
   this->modelName = this->dataPtr->robotNamespace;
   this->worldName = _model->GetWorld()->Name();
 
@@ -94,13 +96,13 @@ void OmniVeyorPlugin::Load(physics::ModelPtr _model,
   {
     int argc = 0;
     char **argv = NULL;
-    ros::init(argc, argv, "gazebo_client",
+    ros::init(argc, argv, this->modelName+"_controller",
         ros::init_options::NoSigintHandler);
   }
 
   // Create our ROS node. This acts in a similar manner to
   // the Gazebo node
-  this->rosNode.reset(new ros::NodeHandle("gazebo_client"));
+  this->rosNode.reset(new ros::NodeHandle(this->modelName));
 
   // Create a named topic, and subscribe to it.
   ros::SubscribeOptions so =

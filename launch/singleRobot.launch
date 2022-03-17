@@ -1,0 +1,113 @@
+<launch>
+<arg name="robot_name" default=""/>
+<arg name="x" default="0.0"/>
+<arg name="y" default="0.0"/>
+
+<group ns="/$(arg robot_name)">
+  <param name="tf_prefix" value="$(arg robot_name)" />
+  
+  <param name="robot_description"
+    command="$(find xacro)/xacro --inorder '$(find omniveyor_common)/urdf/omniveyor.urdf.xacro' gazebo:=true gpu_ray_tracing:=true" />
+  
+  <group if="$(eval robot_name != '')">
+    <!-- You can spawn multiple robots now. use groups to isolate topics. Use x, y arguments to change birth position. use -model to change model name (may be used to prefix topics) -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+      args="-urdf -model $(arg robot_name) -x $(arg x) -y $(arg y) -param robot_description -robot_namespace $(arg robot_name)"/>
+  </group>
+  <group unless="$(eval robot_name != '')">
+    <!-- You can spawn multiple robots now. use groups to isolate topics. Use x, y arguments to change birth position. use -model to change model name (may be used to prefix topics) -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+      args="-urdf -model omniveyor -x $(arg x) -y $(arg y) -param robot_description -robot_namespace /"/>
+  </group>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  
+  <group ns="cam_d1/color/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_d1/infra1/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_d1/infra2/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_d1/depth/image_rect_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_d1/aligned_depth_to_color/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  
+  <group ns="cam_d2/color/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_d2/infra1/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_d2/infra2/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_d2/depth/image_rect_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_d2/aligned_depth_to_color/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  
+  <group ns="cam_t1/fisheye1/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+  <group ns="cam_t1/fisheye2/image_raw/" >
+    <rosparam param="disable_pub_plugins">
+        - 'image_transport/compressedDepth'
+        - 'image_transport/compressed'
+        - 'image_transport/theora'
+    </rosparam>
+  </group>
+</group>
+
+</launch>

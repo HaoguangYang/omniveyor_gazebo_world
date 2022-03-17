@@ -9,15 +9,14 @@
     <arg name="verbose" value="false"/>
   </include>
 
-  <!--node pkg="gazebo_click" type="listener" name="listener" respawn="true" output="screen"/-->
+  <!--Spawn a default robot-->
+  <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch"/>
 
-  <param name="robot_description"
-    command="$(find xacro)/xacro --inorder '$(find omniveyor_common)/urdf/omniveyor.urdf.xacro' gazebo:=true gpu_ray_tracing:=true" />
-    
-  <!-- You can spawn multiple robots now. use groups to isolate topics. Use x, y arguments to change birth position. use -model to change model name (may be used to prefix topics) -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-    args="-urdf -model omniveyor -x 0 -y 0 -param robot_description"/>
-
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
-
+  <!--Spawn a second robot-->
+  <!--include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+    <arg name="robot_name" value="robot_2"/>
+    <arg name="x" value="1.0"/>
+    <arg name="y" value="0.0"/>
+  </include-->
+  
 </launch>
