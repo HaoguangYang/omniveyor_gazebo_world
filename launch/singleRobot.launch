@@ -31,7 +31,7 @@
     <param name="publish_tf"            value="false"/>
     <param name="world_frame"           value="enu"/>
     <remap from="/imu/data_raw"         to="/cam_t1/imu"/>
-    <remap from="/imu/data"             to="/cam_t1/imu_filtered"/>
+    <remap from="/imu/data"             to="/cam_t1/imu/filtered"/>
   </node>
   
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_odom" clear_params="true">
