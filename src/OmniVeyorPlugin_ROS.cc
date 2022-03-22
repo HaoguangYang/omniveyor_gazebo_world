@@ -264,6 +264,8 @@ void OmniVeyorPlugin::controlUpdate(){
   if ((current_time - odom.header.stamp).toSec()>=0.02){
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(_gx(2));
     odom.header.stamp = current_time;
+    odom.header.frame_id = this->modelName+"odom";
+    odom.child_frame_id = this->modelName+"base_link";
     odom.pose.pose.position.x = _gx(0);//*cos_PI_4 + gx(1)*sin_PI_4;
     odom.pose.pose.position.y = _gx(1);//*sin_PI_4 + gx(1)*cos_PI_4;
     odom.pose.pose.orientation = odom_quat;
