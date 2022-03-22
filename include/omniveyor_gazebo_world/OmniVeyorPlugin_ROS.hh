@@ -207,6 +207,22 @@ namespace gazebo
       Eigen::Matrix3d _lambda; 								// vehicle mass matrix
       Eigen::Vector3d _mu;     					 			// velocity coupling vector (centripetal,coriolis)
       
+      void setZeros(){
+          // initialize variables
+          this->_x_local << 0., 0., 0.;
+          this->_gx << 0., 0., 0.;
+          this->_gx_des << 0., 0., 0.;
+          this->_xd_local << 0., 0., 0.;
+          this->_gxd << 0., 0., 0.;
+          this->_gxd_com << 0., 0., 0.;
+          this->_gxd_des << 0., 0., 0.;
+          this->_gxdd << 0., 0., 0.;
+          this->_gxdd_des << 0., 0., 0.;
+          this->_g_cf << 0., 0., 0.;
+          this->_cf_des_local << 0., 0., 0.;
+          this->_heading = 0.;
+      }
+      
       Eigen::Matrix<double, NUM_MOTORS, 3> _C; 		 		// constraint matrix
       Eigen::Matrix<double, NUM_MOTORS, 3> _Cp; 
       Eigen::Matrix<double, NUM_MOTORS, NUM_MOTORS> _Jq; 		 					

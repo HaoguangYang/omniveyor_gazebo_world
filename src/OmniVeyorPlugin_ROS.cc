@@ -119,6 +119,8 @@ void OmniVeyorPlugin::Load(physics::ModelPtr _model,
         boost::bind(&OmniVeyorPlugin::OnModeMsg, this, _1),
         ros::VoidPtr(), &this->rosQueue);
   this->ctrlModeSub = this->rosNode->subscribe(so2);
+  
+  this->setZeros();
 
   // Spin up the queue helper thread.
   this->rosQueueThread =
@@ -159,7 +161,7 @@ void OmniVeyorPlugin::Init()
 void OmniVeyorPlugin::Reset()
 {
   this->SetMotorVelocity(0., 0., 0., 0., 0., 0., 0., 0.);
-
+  
   ModelPlugin::Reset();
 }
 

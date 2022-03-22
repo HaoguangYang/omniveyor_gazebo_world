@@ -14,9 +14,10 @@
     <!-- You can spawn multiple robots now. use groups to isolate topics. Use x, y arguments to change birth position. use -model to change model name (may be used to prefix topics) -->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
       args="-urdf -model $(arg robot_name) -x $(arg x) -y $(arg y) -param robot_description -robot_namespace $(arg robot_name)"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="global_world_link_tf" args="$(arg x) $(arg y) 0 0 0 0 world $(arg robot_name)/odom"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="cam_t1_odom_link" args="-$(arg x) -$(arg y) 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/cam_t1_odom_frame"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="local_world_link_tf" args="-$(arg x) -$(arg y) 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/world"/>
+    <!-- A dirty fix: robot/odom to base_link transform is biased from wheel odom message. Although we have set wheel odom relative to true... -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="global_world_link_tf" args="0 0 0 0 0 0 world $(arg robot_name)/odom"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="cam_t1_odom_link" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/cam_t1_odom_frame"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="local_world_link_tf" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/world"/>
   </group>
   <group unless="$(eval robot_name != '')">
     <!-- You can spawn multiple robots now. use groups to isolate topics. Use x, y arguments to change birth position. use -model to change model name (may be used to prefix topics) -->
@@ -37,6 +38,7 @@
   </node>
   
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_odom" clear_params="true">
+    <param name="tf_prefix" value="$(arg robot_name)" />
     <rosparam command="load" file="$(find pcv_base)/resources/cfg/ekf_odom.yaml" />
     <remap from="odometry/filtered" to="odom/filtered"/>
     <!--  Placeholder for output topic remapping
