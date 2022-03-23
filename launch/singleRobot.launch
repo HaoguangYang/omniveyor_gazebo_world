@@ -22,7 +22,7 @@
   <group unless="$(eval robot_name != '')">
     <!-- You can spawn multiple robots now. use groups to isolate topics. Use x, y arguments to change birth position. use -model to change model name (may be used to prefix topics) -->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-      args="-urdf -model omniveyor -x $(arg x) -y $(arg y) -param robot_description -robot_namespace /"/>
+      args="-urdf -model omniveyor -x $(arg x) -y $(arg y) -param robot_description"/>
     <node pkg="tf2_ros" type="static_transform_publisher" name="cam_t1_odom_link" args="0 0 0 0 0 0 odom cam_t1_odom_frame"/>
     <node pkg="tf2_ros" type="static_transform_publisher" name="world_link_tf" args="0 0 0 0 0 0 odom world"/>
   </group>
