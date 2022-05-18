@@ -10,7 +10,11 @@
   </include>
 
   <!--Spawn a default robot-->
-  <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch"/>
+  <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+    <arg name="has_front_d435i" value="false"/>
+    <arg name="has_rear_d435i" value="false"/>
+    <arg name="has_t265" value="false"/>
+  </include>
 
   <!--Spawn a second robot-->
   <!--include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
