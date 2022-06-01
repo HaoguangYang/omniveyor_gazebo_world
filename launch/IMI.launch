@@ -9,12 +9,15 @@
     <arg name="verbose" value="false"/>
   </include>
 
-  <!--Spawn a default robot-->
-  <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+  <!--Spawn a default robot with LiDAR and three RealSense cameras-->
+  <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch"/>
+  
+  <!--Spawn a bare-bones robot with LiDAR only-->
+  <!--include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
     <arg name="has_front_d435i" value="false"/>
     <arg name="has_rear_d435i" value="false"/>
     <arg name="has_t265" value="false"/>
-  </include>
+  </include-->
 
   <!--Spawn a second robot-->
   <!--include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">

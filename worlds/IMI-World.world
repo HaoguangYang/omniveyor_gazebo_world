@@ -1,11 +1,9 @@
 <sdf version='1.6'>
   <world name='default'>
     <!--
-        A demo world for tracked vehicles.
+        A demo world for Indiana Manufacturing Institute, Purdue University.
 
-        Drive the vehicle by keyboard using arrows, or by publishing the
-        desired velocity to /gazebo/default/<vehicle name>/cmd_vel
-        (x and yaw command the motion).
+        Two demo robots and a bunch of obstacles are included.
     -->
     <gui>
         <plugin name="keyboard" filename="libKeyboardGUIPlugin.so"/>
@@ -57,6 +55,7 @@
         <name>map</name>
     </include>
     
+    <!-- Demo mobile robots -->
     <include>
         <uri>model://tread_drv_robot</uri>
         <!-- DO NOT RENAME THIS ROBOT -->
@@ -69,6 +68,7 @@
         <pose>1 -1 0 0 0 0</pose>
     </include>
     
+    <!-- Demo obstacles -->
     <model name="cylinder_obstacle">
         <static>1</static>
         <pose>0 -3 -0.06 0 0 0</pose>
