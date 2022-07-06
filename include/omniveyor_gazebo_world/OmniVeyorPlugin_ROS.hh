@@ -45,6 +45,7 @@
 #include <Eigen/QR>
 #include <Eigen/Geometry>
 #include <omniveyor_common/definitions.h>
+#include <omniveyor_common/electricalStatus.h>
 
 namespace gazebo
 {
@@ -122,7 +123,7 @@ namespace gazebo
     /// \brief A ROS subscriber
     private: ros::Subscriber cmdVelSub;
     private: ros::Subscriber ctrlModeSub;
-    private: ros::Publisher odomPub;
+    private: ros::Publisher odomPub, eStatusPub;
     /// \brief A ROS callbackqueue that helps process messages
     private: ros::CallbackQueue rosQueue;
 
@@ -138,42 +139,14 @@ namespace gazebo
     }
     public: void OnModeMsg(const std_msgs::ByteConstPtr &_msg)
     {
+      // TODO: Control Mode is not behaving the right behavior.
       if (_msg->data==0)
         this->SetBodyVelocity(0., 0., 0.);
     }
 
     private: nav_msgs::Odometry odom;
     /// \brief ROS helper function that processes messages
-    private: void QueueThread()
-    {
-      //static const double timeout = 0.01;
-      ros::Rate rate(1./CONTROL_PERIOD_s);
-      this->odomPub = this->rosNode->advertise<nav_msgs::Odometry>("odom", 10);
-      odom.header.frame_id = "odom";
-      odom.child_frame_id = "base_link";
-      odom.pose.pose.position.z = 0.0;
-      odom.twist.twist.linear.z = 0.0;
-      odom.twist.twist.angular.x = 0.0;
-      odom.twist.twist.angular.y = 0.0;
-      odom.pose.covariance[0] = 0.01;
-      odom.pose.covariance[7] = 0.01;
-      odom.pose.covariance[14] = 0.01;
-      odom.pose.covariance[21] = 0.034;
-      odom.pose.covariance[28] = 0.034;
-      odom.pose.covariance[35] = 0.034;
-      odom.twist.covariance[0] = 0.1;
-      odom.twist.covariance[7] = 0.1;
-      odom.twist.covariance[14] = 0.1;
-      odom.twist.covariance[21] = 0.34;
-      odom.twist.covariance[28] = 0.34;
-      odom.twist.covariance[35] = 0.34;
-      while (this->rosNode->ok())
-      {
-        this->controlUpdate();
-        rate.sleep();
-        this->rosQueue.callAvailable();
-      }
-    }
+    private: void QueueThread();
 
     private:
       void controlUpdate();

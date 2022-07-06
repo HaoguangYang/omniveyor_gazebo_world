@@ -212,6 +212,61 @@ void OmniVeyorPlugin::SetMotorVelocity(double _strFL, double _rolFL,
   this->dataPtr->model->GetJoint("RR_wheel_axle")->SetParam("vel", 0, rolRR);
 }
 
+void OmniVeyorPlugin::QueueThread(){
+    // TODO: move this function implementation to .cpp
+    //static const double timeout = 0.01;
+    ros::Rate rate(1./CONTROL_PERIOD_s);
+    this->odomPub = this->rosNode->advertise<nav_msgs::Odometry>("odom", 10);
+    this->eStatusPub = this->rosNode->advertise<omniveyor_common::electricalStatus>("electricalStatus", 10);
+    odom.header.frame_id = "odom";
+    odom.child_frame_id = "base_link";
+    odom.pose.pose.position.z = 0.0;
+    odom.twist.twist.linear.z = 0.0;
+    odom.twist.twist.angular.x = 0.0;
+    odom.twist.twist.angular.y = 0.0;
+    odom.pose.covariance[0] = 0.01;
+    odom.pose.covariance[7] = 0.01;
+    odom.pose.covariance[14] = 0.01;
+    odom.pose.covariance[21] = 0.034;
+    odom.pose.covariance[28] = 0.034;
+    odom.pose.covariance[35] = 0.034;
+    odom.twist.covariance[0] = 0.1;
+    odom.twist.covariance[7] = 0.1;
+    odom.twist.covariance[14] = 0.1;
+    odom.twist.covariance[21] = 0.34;
+    odom.twist.covariance[28] = 0.34;
+    odom.twist.covariance[35] = 0.34;
+
+    // TODO: electrical status message populate and publish is not implemented.
+    /*
+    omniveyor_common::electricalStatus eStatus = omniveyor_common::electricalStatus();
+    eStatus.stamp = current_time;
+    eStatus.steer_1_Volt = eStatus_tmp.steerMotorVoltage[0];
+    eStatus.steer_2_Volt = eStatus_tmp.steerMotorVoltage[1];
+    eStatus.steer_3_Volt = eStatus_tmp.steerMotorVoltage[2];
+    eStatus.steer_4_Volt = eStatus_tmp.steerMotorVoltage[3];
+    eStatus.steer_1_Amp = eStatus_tmp.steerMotorCurrent[0];
+    eStatus.steer_2_Amp = eStatus_tmp.steerMotorCurrent[1];
+    eStatus.steer_3_Amp = eStatus_tmp.steerMotorCurrent[2];
+    eStatus.steer_4_Amp = eStatus_tmp.steerMotorCurrent[3];
+    eStatus.roll_1_Volt = eStatus_tmp.rollMotorVoltage[0];
+    eStatus.roll_2_Volt = eStatus_tmp.rollMotorVoltage[1];
+    eStatus.roll_3_Volt = eStatus_tmp.rollMotorVoltage[2];
+    eStatus.roll_4_Volt = eStatus_tmp.rollMotorVoltage[3];
+    eStatus.roll_1_Amp = eStatus_tmp.rollMotorCurrent[0];
+    eStatus.roll_2_Amp = eStatus_tmp.rollMotorCurrent[1];
+    eStatus.roll_3_Amp = eStatus_tmp.rollMotorCurrent[2];
+    eStatus.roll_4_Amp = eStatus_tmp.rollMotorCurrent[3];
+    */
+
+    while (this->rosNode->ok())
+    {
+        this->controlUpdate();
+        rate.sleep();
+        this->rosQueue.callAvailable();
+    }
+}
+
 void OmniVeyorPlugin::SetBodyVelocity(
     const double _linearX, const double _linearY, const double _angular)
 {
