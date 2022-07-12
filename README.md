@@ -2,21 +2,24 @@
   This is a sub-unit for Gazebo-based simulation, part of the `omniveyor` meta-package. It's strongly recommended to follow the standard setup procedure described in the [OmniVeyor meta-package](https://github.com/HaoguangYang/omniveyor) and configure the computer as `Option 3` to enable best consistency with the physical robots in the simulation. This package also serves as a stand-alone teaching material for the [MFET 642 ROS programming class](https://web.ics.purdue.edu/~rvoyles/Classes/ROS_MFET642/index.html), for the students to gain knowledge of the Gazebo simulator.
 
 ### To run the Gazebo simulator:
-  ```sh
-  # first make a catkin workspace if you haven't done so.
-  source /opt/ros/noetic/setup.bash   # if you haven't done so.
-  mkdir -p ./ros_ws/src
-  cd ./ros_ws
-  rosinstall ./src /opt/ros/noetic https://raw.githubusercontent.com/HaoguangYang/omniveyor_gazebo_world/master/omniveyor_gazebo_world.rosinstall
-  # compile the package.
-  catkin_make -DCMAKE_BUILD_TYPE=Release
-  ```
-  Fix any dependency issues should they causes compilation error. Then:
-  ```sh
-  source ./devel/setup.sh
-  roslaunch omniveyor_gazebo_world IMI.launch
-  ```
-  You should see three robots spawned in the simulated 3D factory floor.
+  - If you are running this simulation setup as a stand-alone package, you have to compile first:
+    ```sh
+    # first make a catkin workspace if you haven't done so.
+    source /opt/ros/noetic/setup.bash   # if you haven't done so.
+    mkdir -p ./ros_ws/src
+    cd ./ros_ws
+    rosinstall ./src /opt/ros/noetic https://raw.githubusercontent.com/HaoguangYang/omniveyor_gazebo_world/master/omniveyor_gazebo_world.rosinstall
+    # compile the package.
+    catkin_make -DCMAKE_BUILD_TYPE=Release
+    ```
+    Fix any dependency issues should they causes compilation error.
+    If you are following the [standard setup procedure](https://github.com/HaoguangYang/omniveyor), the simulator package should be already compiled.
+  - To run the simulation scene:
+    ```sh
+    source ./devel/setup.sh
+    roslaunch omniveyor_gazebo_world IMI.launch
+    ```
+    You should see three robots spawned in the simulated 3D factory floor.
 
 ### Operation Tutorial:
 
