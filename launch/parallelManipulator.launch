@@ -1,5 +1,5 @@
 <launch>
-    <arg name="contorl" default="0"/>
+    <arg name="control" default="0"/>
     
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(find omniveyor_gazebo_world)/worlds/IMI-World.world"/> 
@@ -32,7 +32,7 @@
         <arg name="t265_fuse_odom" value="true"/>
     </include>
     
-    <group if="$(arg contorl)">
+    <group if="$(arg control)">
         <include file="$(find omniveyor_mobility)/launch/multi_robot_remote_teleop_on_host.launch">
             <arg name="odom_only" value="1"/>
         </include>
