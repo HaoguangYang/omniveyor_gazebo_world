@@ -1,0 +1,35 @@
+<launch>
+    <arg name="world" default="IMI-World"/>
+    <arg name="keyboard_teleop" default="0"/>
+    <arg name="joystick_teleop" default="0"/>
+    
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find omniveyor_gazebo_world)/worlds/$(arg world).world"/> 
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="recording" value="false"/>
+        <arg name="debug" value="false"/>
+        <arg name="verbose" value="false"/>
+    </include>
+
+    <!--Spawn a default robot with LiDAR and three RealSense cameras-->
+    <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+        <arg name="t265_fuse_odom" value="true"/>
+    </include>
+
+    <!--Spawn a second robot-->
+    <!--include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+        <arg name="robot_name" value="robot_2"/>
+        <arg name="x" value="1.0"/>
+        <arg name="y" value="0.0"/>
+    </include-->
+    
+    <group if="$(arg joystick_teleop)">
+        <include file="$(find pcv_base)/launch/includes/joystick_teleop.launch" />
+    </group>
+    <group if="$(arg keyboard_teleop)">
+        <include file="$(find pcv_base)/launch/includes/keyboard_teleop.launch" />
+    </group>
+  
+</launch>

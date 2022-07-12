@@ -3,6 +3,9 @@
 
 ### To run the Gazebo simulator:
   - If you are running this simulation setup as a stand-alone package, you have to compile first:
+    
+    N.B. If you are following the [standard setup procedure](https://github.com/HaoguangYang/omniveyor), the simulator package should be already compiled.
+    
     ```sh
     # first make a catkin workspace if you haven't done so.
     source /opt/ros/noetic/setup.bash   # if you haven't done so.
@@ -13,7 +16,6 @@
     catkin_make -DCMAKE_BUILD_TYPE=Release
     ```
     Fix any dependency issues should they causes compilation error.
-    If you are following the [standard setup procedure](https://github.com/HaoguangYang/omniveyor), the simulator package should be already compiled.
   - To run the simulation scene:
     ```sh
     source ./devel/setup.sh
@@ -62,13 +64,22 @@
 #### Consistency with the physical robot:
   (requires [standard setup procedure and dependency packages](https://github.com/HaoguangYang/omniveyor))
   ```sh
-  roslaunch omniveyor_gazebo_world omniveyorSim.launch world:=IMI-World
+  roslaunch omniveyor_gazebo_world omniveyorSim.launch world:=IMI-World keyboard_teleop:=1
+  ```
+  If you have a joystick, you can also try:
+  ```sh
+  roslaunch omniveyor_gazebo_world omniveyorSim.launch world:=IMI-World joystick_teleop:=1
   ```
   -  This starts the simulation of the robot with the same sensor setup with the physical robot (compared with `roslaunch pcv_base run_bare_bones.launch`), in the world file specified by the `world` argument.
 
 #### Multi-robot operation example:
+  (requires [standard setup procedure and dependency packages](https://github.com/HaoguangYang/omniveyor))
   ```sh
   roslaunch omniveyor_gazebo_world parallelManipulator.launch
+  ```
+  To plug in the jacobian-based platooning algorithm, run:
+  ```sh
+  roslaunch omniveyor_gazebo_world parallelManipulator.launch control:=1
   ```
   - If multiple OmniVeyors are spawned, the topics are encapsulated under the robot's namespace.
 

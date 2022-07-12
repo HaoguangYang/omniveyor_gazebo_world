@@ -1,33 +1,40 @@
 <launch>
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find omniveyor_gazebo_world)/worlds/IMI-World.world"/> 
-    <arg name="paused" value="false"/>
-    <arg name="use_sim_time" value="true"/>
-    <arg name="gui" value="true"/>
-    <arg name="recording" value="false"/>
-    <arg name="debug" value="false"/>
-    <arg name="verbose" value="false"/>
-  </include>
+    <arg name="contorl" default="0"/>
+    
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find omniveyor_gazebo_world)/worlds/IMI-World.world"/> 
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="recording" value="false"/>
+        <arg name="debug" value="false"/>
+        <arg name="verbose" value="false"/>
+    </include>
 
-  <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
-    <arg name="robot_name" value="robot_6"/>
-    <arg name="x" value="0.0"/>
-    <arg name="y" value="0.0"/>
-    <arg name="t265_fuse_odom" value="true"/>
-  </include>
-  
-  <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
-    <arg name="robot_name" value="robot_8"/>
-    <arg name="x" value="1.0"/>
-    <arg name="y" value="0.0"/>
-    <arg name="t265_fuse_odom" value="true"/>
-  </include>
-  
-  <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
-    <arg name="robot_name" value="robot_9"/>
-    <arg name="x" value="0.0"/>
-    <arg name="y" value="1.0"/>
-    <arg name="t265_fuse_odom" value="true"/>
-  </include>
-  
+    <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+        <arg name="robot_name" value="robot_6"/>
+        <arg name="x" value="0.0"/>
+        <arg name="y" value="0.0"/>
+        <arg name="t265_fuse_odom" value="true"/>
+    </include>
+    
+    <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+        <arg name="robot_name" value="robot_8"/>
+        <arg name="x" value="1.0"/>
+        <arg name="y" value="0.0"/>
+        <arg name="t265_fuse_odom" value="true"/>
+    </include>
+    
+    <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+        <arg name="robot_name" value="robot_9"/>
+        <arg name="x" value="0.0"/>
+        <arg name="y" value="1.0"/>
+        <arg name="t265_fuse_odom" value="true"/>
+    </include>
+    
+    <group if="$(arg contorl)">
+        <include file="$(find omniveyor_mobility)/launch/multi_robot_remote_teleop_on_host.launch">
+            <arg name="odom_only" value="1"/>
+        </include>
+    </group>
 </launch>
