@@ -249,14 +249,14 @@ if (Qt5_FOUND)
     list (APPEND Qt_LIBRARIES "Qt5::Gui" "Qt5::Core")
 endif()
 
-add_executable(listener src/listener.cc)
-target_link_libraries(listener ${GAZEBO_LIBRARIES} pthread)
-target_link_libraries(listener ${catkin_LIBRARIES})
-add_library(gui_set_path SHARED ${headers_MOC}
-  src/GUISetPath.cc)
-target_link_libraries(gui_set_path ${GAZEBO_LIBRARIES}
-    ${Qt_LIBRARIES}
-    ${PROTOBUF_LIBRARIES})
+#add_executable(listener src/listener.cc)
+#target_link_libraries(listener ${GAZEBO_LIBRARIES} pthread)
+#target_link_libraries(listener ${catkin_LIBRARIES})
+#add_library(gui_set_path SHARED ${headers_MOC}
+#  src/GUISetPath.cc)
+#target_link_libraries(gui_set_path ${GAZEBO_LIBRARIES}
+#    ${Qt_LIBRARIES}
+#    ${PROTOBUF_LIBRARIES})
   
 add_library(gazebo_2Dmap_plugin SHARED src/gazebo_2Dmap_plugin.cpp)
 target_link_libraries(gazebo_2Dmap_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
@@ -270,5 +270,6 @@ target_link_libraries(SimpleTrackedVehiclePlugin_ROS TrackedVehiclePlugin_ROS ${
 
 add_library(OmniVeyorPlugin_ROS SHARED
   src/OmniVeyorPlugin_ROS.cc)
+add_dependencies(OmniVeyorPlugin_ROS omniveyor_common_generate_messages_cpp)
 target_link_libraries(OmniVeyorPlugin_ROS ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES} Eigen3::Eigen)
 
