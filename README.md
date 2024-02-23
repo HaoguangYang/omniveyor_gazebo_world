@@ -15,7 +15,12 @@
     # compile the package.
     catkin_make -DCMAKE_BUILD_TYPE=Release
     ```
-    Fix any dependency issues should they causes compilation error.
+    Fix any dependency issues should they causes compilation error. Most likely you wil see an error about missing `costmap_2d` package. Install it with `apt-get`:
+    ```sh
+    sudo apt-get install ros-noetic-costmap-2d
+    ```
+    Recompile the workspace and make sure the error is gone.
+
   - To run the simulation scene:
     ```sh
     source ./devel/setup.sh
@@ -27,7 +32,7 @@
 
 #### Demos 101:
   - Gazebo example 1: The differential-drive robot is set up for manually specifying joint commands in the Gazebo GUI.
-  - Gazebo example 2: The treaded robot is set up to receive Twist command from ROS. Try:
+  - Gazebo example 2: The treaded robot is set up to receive Twist command from ROS. Try (use `Tab` key to autofill the message content, or just sequentially supply six floating point values):
     ```sh
     rostopic pub /simple_tracked/cmd_vel_twist geometry_msgs/Twist
     "linear:
@@ -41,7 +46,7 @@
     ```
 
 #### To operate the OmniVeyor robot:
-  - The OmniVeyor is set up with a full suite of LiDAR, camera, IMU, and odometry sensors. To control its motion and receive its wheel odometry, try:
+  - The OmniVeyor is set up with a full suite of LiDAR, camera, IMU, and odometry sensors. To control its motion and receive its wheel odometry, try (again, use `Tab` key to autofill the message content, or just sequentially supply six floating point values):
     ```sh
     rostopic pub /cmd_vel geometry_msgs/Twist 
     "linear:

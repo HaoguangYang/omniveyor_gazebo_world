@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  costmap_2d
   geometry_msgs
   gazebo_msgs
   gazebo_ros
