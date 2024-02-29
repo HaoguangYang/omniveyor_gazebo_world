@@ -4,7 +4,7 @@
 ### To run the Gazebo simulator:
   - If you are running this simulation setup as a stand-alone package, you have to compile first:
     
-    N.B. If you are following the [standard setup procedure](https://github.com/HaoguangYang/omniveyor), the simulator package should be already compiled.
+    N.B. If you are following the [standard setup procedure](https://github.com/HaoguangYang/omniveyor)(**THIS INSTRUCTION IS NOT FOR MFET 442**), the simulator package should be already compiled.
     
     ```sh
     # first make a catkin workspace if you haven't done so.
