@@ -28,6 +28,22 @@
     ```
     You should see three robots spawned in the simulated 3D factory floor.
 
+  - You can inspect the contents of `launch/IMI.launch` as an example of how to disable some sensors on the robot model to relief computational load, or spawn a robot at a specified coordinate. e.g. to disable cameras on the robot model, you can add arguments to the included robot launch script, for example:
+    ```xml
+    <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+      <arg name="has_front_d435i" value="false"/>
+      <arg name="has_rear_d435i" value="false"/>
+      <arg name="has_t265" value="false"/>
+    </include>
+    ```
+    To control where the robot is spawned, you can add arguments specifying its initial coordinates, like:
+    ```xml
+    <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+      <arg name="x" value="1.0"/>
+      <arg name="y" value="0.0"/>
+    </include>
+    ```
+
 ### Operation Tutorial:
 
 #### Demos 101:
