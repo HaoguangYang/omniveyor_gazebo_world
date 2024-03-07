@@ -1,10 +1,10 @@
 ### Before You Start:
-  This is a sub-unit for Gazebo-based simulation, part of the `omniveyor` meta-package. It's strongly recommended to follow the standard setup procedure described in the [OmniVeyor meta-package](https://github.com/HaoguangYang/omniveyor) and configure the computer as `Option 3` to enable best consistency with the physical robots in the simulation. This package also serves as a stand-alone teaching material for the [MFET 642 ROS programming class](https://web.ics.purdue.edu/~rvoyles/Classes/ROS_MFET642/index.html), for the students to gain knowledge of the Gazebo simulator.
+  This is a sub-unit for Gazebo-based simulation, part of the `omniveyor` meta-package. For working with a physical robot (**NOT** for MFET442/642 class series), we strongly recommended to follow the standard (workstation/robot) setup procedure described in the [OmniVeyor meta-package](https://github.com/HaoguangYang/omniveyor) and configuring the workstation as `Option 3`. The option enables the best consistency with the physical robots in the simulation. This package also serves as a stand-alone teaching material for the [MFET 642 ROS programming class](https://web.ics.purdue.edu/~rvoyles/Classes/ROS_MFET642/index.html), for the students to gain knowledge of the Gazebo simulator.
 
 ### To run the Gazebo simulator:
+  > N.B. If you are setting up a workstation for a physical robot, and have followed the [standard setup procedure](https://github.com/HaoguangYang/omniveyor), the simulator package should be already compiled. Please go directly to step 2. **Note that the workstation setup procedure DOES NOT apply to MFET442/642 students**. For students taking MFET442 please ignore this N.B. block and continue with step 1.
+
   - If you are running this simulation setup as a stand-alone package, you have to compile first:
-    
-    N.B. If you are following the [standard setup procedure](https://github.com/HaoguangYang/omniveyor), the simulator package should be already compiled.
     
     ```sh
     # first make a catkin workspace if you haven't done so.
@@ -27,6 +27,22 @@
     roslaunch omniveyor_gazebo_world IMI.launch
     ```
     You should see three robots spawned in the simulated 3D factory floor.
+
+  - You can inspect the contents of `launch/IMI.launch` as an example of how to disable some sensors on the robot model to relief computational load, or spawn a robot at a specified coordinate. e.g. to disable cameras on the robot model, you can add arguments to the included robot launch script, for example:
+    ```xml
+    <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+      <arg name="has_front_d435i" value="false"/>
+      <arg name="has_rear_d435i" value="false"/>
+      <arg name="has_t265" value="false"/>
+    </include>
+    ```
+    To control where the robot is spawned, you can add arguments specifying its initial coordinates, like:
+    ```xml
+    <include file="$(find omniveyor_gazebo_world)/launch/singleRobot.launch">
+      <arg name="x" value="1.0"/>
+      <arg name="y" value="0.0"/>
+    </include>
+    ```
 
 ### Operation Tutorial:
 
