@@ -66,6 +66,19 @@
   - To fetch camera RGB and depth images, refer to the `/cam_d1/depth/image_rect_raw`, `/cam_d1/color/image_raw` topics, etc.
   - Referring to the launch file and urdf/xacro files in dependent package `omniveyor_common` for detailed explanation on available options.
 
+#### List of useful topics:
+  The robot operates with the following topics:
+  - `/cmd_vel` :arrow_left: type: `geometry_msgs/Twist`, velocity command to the OmniVeyor robot.
+
+  The robot provides the following topics:
+  - `/tf_static` :arrow_right: static transformations from the robot base link (geometric center, projected to the ground) to all sensors (one LiDAR, three optional cameras with builtin Inertial Measurement Units) onboard. The robot's URDF definition is provided in the `omniveyor_common` package.
+  - `/tf` :arrow_right: transformations between relatively moving frames. The OmniVeyor simulator provides the `odom` --> `base_link` transform, specifically.
+  - `/odom` :arrow_right: type: `nav_msgs/Odometry`, cumulative motion calculated from integrating wheel rotations. Updates at $50$ Hz.
+  - `/scan` :arrow_right: type: `sensor_msgs/Scan`, 2-D LiDAR scan provided by a simulated Hokuyo LiDAR located on the bottom of the robot. It provides distances to surroundings on the front half circle (field of view: right 90 degs --> front --> left 90 degs). Updates at $40$ Hz.
+  - (Optional) `/cam_d1/*` namespace :arrow_right: topics mimicking an Intel RealSense D435i camera, mounted on the top of the robot and facing front. Topics inside this namespace, as the topic names suggest, include a color image, a depth image, and an IMU readout.
+  - (Optional) `/cam_d2/*` namespace :arrow_right: topics mimicking an Intel RealSense D435i camera, mounted on the top of the robot and facing rear. Topics inside this namespace, as the topic names suggest, include a color image, a depth image, and an IMU readout.
+  - (Optional) `/cam_t1/*` namespace :arrow_right: topics mimicking an Intel Tracking T265 camera, mounted on the top of the robot and facing front. The camera performs internal visual-inertial odometry. Topics inside this namespace, as the topic names suggest, include video streams from two fisheye cameras, an IMU readout, and a fused visual odometry calculation.
+
 #### Consistency with the physical robot:
   (requires [standard setup procedure and dependency packages](https://github.com/HaoguangYang/omniveyor))
   ```sh
